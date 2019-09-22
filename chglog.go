@@ -21,6 +21,7 @@ type Options struct {
 	TagFilterPattern     string              // Filter tag by regexp
 	CommitFilters        map[string][]string // Filter by using `Commit` properties and values. Filtering is not done by specifying an empty value
 	CommitSortBy         string              // Property name to use for sorting `Commit` (e.g. `Scope`)
+	CommitTypeMaps       map[string]string   // Map to aggregate commit types (e.g., fixed => fix)
 	CommitGroupBy        string              // Property name of `Commit` to be grouped into `CommitGroup` (e.g. `Type`)
 	CommitGroupSortBy    string              // Property name to use for sorting `CommitGroup` (e.g. `Title`)
 	CommitGroupTitleMaps map[string]string   // Map for `CommitGroup` title conversion

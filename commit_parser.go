@@ -185,6 +185,13 @@ func (p *commitParser) processHeader(commit *Commit, input string) {
 	res = p.reHeader.FindAllStringSubmatch(input, -1)
 	if len(res) > 0 {
 		assignDynamicValues(commit, opts.HeaderPatternMaps, res[0][1:])
+		// remap Types
+		for matchType, mappedType := range opts.CommitTypeMaps {
+			// use "smart" case matching (default == case-sensitive, but case-insensitive if matchType is lower-case)
+			if (matchType == commit.Type) || (strings.ToLower(matchType) == matchType && strings.EqualFold(matchType, commit.Type)) {
+				commit.Type = mappedType
+			}
+		}
 	}
 
 	// Merge

@@ -16,8 +16,9 @@ type Info struct {
 
 // CommitOptions ...
 type CommitOptions struct {
-	Filters map[string][]string `yaml:"filters"`
-	SortBy  string              `yaml:"sort_by"`
+	Filters  map[string][]string `yaml:"filters"`
+	SortBy   string              `yaml:"sort_by"`
+	TypeMaps map[string]string   `yaml:"type_maps"`
 }
 
 // CommitGroupOptions ...
@@ -267,6 +268,7 @@ func (config *Config) Convert(ctx *CLIContext) *chglog.Config {
 			TagFilterPattern:     (map[bool]string{true: ctx.TagFilterPattern, false: opts.Tag.Pattern})[ctx.TagFilterPattern != ""],
 			CommitFilters:        opts.Commits.Filters,
 			CommitSortBy:         opts.Commits.SortBy,
+			CommitTypeMaps:       opts.Commits.TypeMaps,
 			CommitGroupBy:        opts.CommitGroups.GroupBy,
 			CommitGroupSortBy:    opts.CommitGroups.SortBy,
 			CommitGroupTitleMaps: opts.CommitGroups.TitleMaps,
