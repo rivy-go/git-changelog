@@ -42,7 +42,9 @@ func assignDynamicValues(target interface{}, attrs []string, values []string) {
 
 	for i, field := range attrs {
 		if f, ok := rt.FieldByName(field); ok {
-			rv.FieldByIndex(f.Index).SetString(values[i])
+			if values[i] != "" {
+				rv.FieldByIndex(f.Index).SetString(values[i])
+			}
 		}
 	}
 }
