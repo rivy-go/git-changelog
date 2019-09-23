@@ -88,8 +88,7 @@ func TestGeneratorNotFoundTags(t *testing.T) {
 
 	buf := &bytes.Buffer{}
 	err := gen.Generate(buf, "")
-	assert.Error(err)
-	assert.Contains(err.Error(), "git-tag does not exist")
+	assert.Nil(err)
 	assert.Equal("", buf.String())
 }
 
