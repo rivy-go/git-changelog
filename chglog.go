@@ -53,6 +53,7 @@ type RenderData struct {
 type Config struct {
 	Bin        string // Git execution command
 	WorkingDir string // Working directory
+	Style      string // repository style (eg, "bitbucket", "github", "gitlab", ...)
 	Template   string // Path for template file. If a relative path is specified, it depends on the value of `WorkingDir`.
 	Info       *Info
 	Options    *Options
@@ -305,6 +306,14 @@ func (gen *Generator) render(w io.Writer, unreleased *Unreleased, versions []*Ve
 	}
 
 	fmap := template.FuncMap{
+		// format commit hash URL based on repository style
+		"commitURL": func(hash string) string {
+			if gen.config.Style == "bitbucket" {
+				return fmt.Sprintf("%s/commits/%s", gen.config.Info.RepositoryURL, hash)
+			}
+			// default to 'github'/'gitlab' style
+			return fmt.Sprintf("%s/commit/%s", gen.config.Info.RepositoryURL, hash)
+		},
 		// format the input time according to layout
 		"datetime": func(layout string, input time.Time) string {
 			return input.Format(layout)

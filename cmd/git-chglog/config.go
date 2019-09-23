@@ -258,6 +258,7 @@ func (config *Config) Convert(ctx *CLIContext) *chglog.Config {
 	return &chglog.Config{
 		Bin:        config.Bin,
 		WorkingDir: ctx.WorkingDir,
+		Style:      config.Style,
 		Template:   config.Template,
 		Info: &chglog.Info{
 			Title:         info.Title,
