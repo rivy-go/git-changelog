@@ -94,6 +94,11 @@ func CreateApp(actionFunc cli.ActionFunc) *cli.App {
 			Usage: "treat unreleased commits as specified tags (EXPERIMENTAL)",
 		},
 
+		cli.BoolFlag{
+			Name:  "unreleased, u",
+			Usage: "include unreleased commits",
+		},
+
 		// silent
 		cli.BoolFlag{
 			Name:  "silent",
@@ -116,8 +121,8 @@ func CreateApp(actionFunc cli.ActionFunc) *cli.App {
 
 		// tag-filter-pattern
 		cli.StringFlag{
-			Name:   "tag-filter-pattern, p",
-			Usage:  "Regular expression of tag filter. Is specified, only matched tags will be picked",
+			Name:  "tag-filter-pattern, p",
+			Usage: "Regular expression of tag filter. Is specified, only matched tags will be picked",
 		},
 
 		// help & version
@@ -162,17 +167,18 @@ func AppAction(c *cli.Context) error {
 	// chglog
 	chglogCLI := NewCLI(
 		&CLIContext{
-			WorkingDir: wd,
-			Stdout:     colorable.NewColorableStdout(),
-			Stderr:     colorable.NewColorableStderr(),
-			ConfigPath: c.String("config"),
-			OutputPath: c.String("output"),
-			Silent:     c.Bool("silent"),
-			NoColor:    c.Bool("no-color"),
-			NoEmoji:    c.Bool("no-emoji"),
-			Query:      c.Args().First(),
-			NextTag:    c.String("next-tag"),
+			WorkingDir:       wd,
+			Stdout:           colorable.NewColorableStdout(),
+			Stderr:           colorable.NewColorableStderr(),
+			ConfigPath:       c.String("config"),
+			OutputPath:       c.String("output"),
+			Silent:           c.Bool("silent"),
+			NoColor:          c.Bool("no-color"),
+			NoEmoji:          c.Bool("no-emoji"),
+			Query:            c.Args().First(),
+			NextTag:          c.String("next-tag"),
 			TagFilterPattern: c.String("tag-filter-pattern"),
+			Unreleased:       c.Bool("unreleased"),
 		},
 		fs,
 		NewConfigLoader(),

@@ -16,6 +16,7 @@ import (
 // Options is an option used to process commits
 type Options struct {
 	Processor            Processor
+	ShowUnreleased       bool                // Enable processing of unreleased commits
 	NextTag              string              // Treat unreleased commits as specified tags (EXPERIMENTAL)
 	TagFilterPattern     string              // Filter tag by regexp
 	CommitFilters        map[string][]string // Filter by using `Commit` properties and values. Filtering is not done by specifying an empty value
@@ -207,7 +208,7 @@ func (gen *Generator) readVersions(tags []*Tag, first string) ([]*Version, error
 }
 
 func (gen *Generator) readUnreleased(tags []*Tag) (*Unreleased, error) {
-	if gen.config.Options.NextTag != "" {
+	if (!gen.config.Options.ShowUnreleased) || (gen.config.Options.NextTag != "") {
 		return &Unreleased{}, nil
 	}
 
