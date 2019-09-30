@@ -48,11 +48,17 @@ type NoteOptions struct {
 	Keywords []string `yaml:"keywords"`
 }
 
+// TagOptions ...
+type TagOptions struct {
+	Pattern string `yaml:"pattern"`
+}
+
 // Options ...
 type Options struct {
 	Commits      CommitOptions      `yaml:"commits"`
 	CommitGroups CommitGroupOptions `yaml:"commit_groups"`
 	Header       PatternOptions     `yaml:"header"`
+	Tag          TagOptions         `yaml:"tag"`
 	Issues       IssueOptions       `yaml:"issues"`
 	Refs         RefOptions         `yaml:"refs"`
 	Merges       PatternOptions     `yaml:"merges"`
@@ -258,7 +264,7 @@ func (config *Config) Convert(ctx *CLIContext) *chglog.Config {
 		},
 		Options: &chglog.Options{
 			NextTag:              ctx.NextTag,
-			TagFilterPattern:     ctx.TagFilterPattern,
+			TagFilterPattern:     (map[bool]string{true: ctx.TagFilterPattern, false: opts.Tag.Pattern})[ctx.TagFilterPattern != ""],
 			CommitFilters:        opts.Commits.Filters,
 			CommitSortBy:         opts.Commits.SortBy,
 			CommitGroupBy:        opts.CommitGroups.GroupBy,
