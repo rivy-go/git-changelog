@@ -65,6 +65,7 @@ type Commit struct {
 	Header    string   // (e.g. `feat(core): Add new feature`)
 	Type      string   // (e.g. `feat`)
 	Scope     string   // (e.g. `core`)
+	Separator string   // (e.g. `~` or `:`)
 	Subject   string   // (e.g. `Add new feature`)
 	Body      string
 }
