@@ -19,6 +19,7 @@ type Options struct {
 	ShowUnreleased       bool                // Enable processing of unreleased commits
 	NextTag              string              // Treat unreleased commits as specified tags (EXPERIMENTAL)
 	TagFilterPattern     string              // Filter tag by regexp
+	NoCaseSensitive      bool                // Filter commits in a case insensitive way
 	CommitFilters        map[string][]string // Filter by using `Commit` properties and values. Filtering is not done by specifying an empty value
 	CommitSortBy         string              // Property name to use for sorting `Commit` (e.g. `Scope`)
 	CommitTypeMaps       map[string]string   // Map to aggregate commit types (e.g., fixed => fix)
@@ -337,6 +338,13 @@ func (gen *Generator) render(w io.Writer, unreleased *Unreleased, versions []*Ve
 		// upper case a string
 		"upper": func(s string) string {
 			return strings.ToUpper(s)
+		},
+		// upper case the first character of a string
+		"upperFirst": func(s string) string {
+			if len(s) > 0 {
+				return strings.ToUpper(string(s[0])) + s[1:]
+			}
+			return ""
 		},
 	}
 

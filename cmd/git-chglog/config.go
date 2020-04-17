@@ -269,6 +269,7 @@ func (config *Config) Convert(ctx *CLIContext) *chglog.Config {
 			ShowUnreleased:       ctx.Unreleased,
 			NextTag:              ctx.NextTag,
 			TagFilterPattern:     (map[bool]string{true: ctx.TagFilterPattern, false: opts.Tag.Pattern})[ctx.TagFilterPattern != ""],
+			NoCaseSensitive:      ctx.NoCaseSensitive,
 			CommitFilters:        opts.Commits.Filters,
 			CommitSortBy:         opts.Commits.SortBy,
 			CommitTypeMaps:       opts.Commits.TypeMaps,

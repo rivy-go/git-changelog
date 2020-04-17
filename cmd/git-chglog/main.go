@@ -119,6 +119,12 @@ func CreateApp(actionFunc cli.ActionFunc) *cli.App {
 			EnvVar: "NO_EMOJI",
 		},
 
+		// no-case
+		cli.BoolFlag{
+			Name:  "no-case",
+			Usage: "disable case sensitive filters",
+		},
+
 		// tag-filter-pattern
 		cli.StringFlag{
 			Name:  "tag-filter-pattern, p",
@@ -175,6 +181,7 @@ func AppAction(c *cli.Context) error {
 			Silent:           c.Bool("silent"),
 			NoColor:          c.Bool("no-color"),
 			NoEmoji:          c.Bool("no-emoji"),
+			NoCaseSensitive:  c.Bool("no-case"),
 			Query:            c.Args().First(),
 			NextTag:          c.String("next-tag"),
 			TagFilterPattern: c.String("tag-filter-pattern"),
