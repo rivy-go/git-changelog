@@ -1,7 +1,7 @@
-# spell-checker:ignore bugfix maint
-# spell-checker:ignore chglog
+# spell-checker:ignore (jargon) bugfix maint
+# spell-checker:ignore (names) chglog rivy
 info:
-  title: git-chglog
+  title: rivy-go/git-chglog
   repository_url: https://github.com/rivy-go/git-chglog
 style: github
 template: CHANGELOG.tpl.md
@@ -34,6 +34,7 @@ options:
       update: update
       # version: version
       # aggregating types
+      "": change
       add: change
       added: change
       bugfix: fix
@@ -60,8 +61,10 @@ options:
       update: Dependency Updates
       # version: Version Changes
   header:
-    pattern: "^(\\w+)(?:\\s*\\/(\\S+))\\s*[~:]?\\s(.*)$|^(\\w+)(?:\\s*\\(([^)]+)\\))?\\s*[~:]?\\s(.*)$"
+    pattern: "^\\s*(\\w+)(?:\\s*\\/([^[:space:]:~]+))\\s*[:~]?\\s(.*)$|^\\s*(\\w+)(?:\\s*\\(([^)]+)\\))?\\s*[:~]?\\s(.*)$"
     pattern_maps:
+      # - Scope
+      # - Subject
       - Type
       - Scope
       - Subject
