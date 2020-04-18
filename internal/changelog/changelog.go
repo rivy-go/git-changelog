@@ -6,6 +6,7 @@ import (
 	"io"
 	"os"
 	"path/filepath"
+	"regexp"
 	"strings"
 	"text/template"
 	"time"
@@ -339,12 +340,15 @@ func (gen *Generator) render(w io.Writer, unreleased *Unreleased, versions []*Ve
 		"upper": func(s string) string {
 			return strings.ToUpper(s)
 		},
-		// upper case the first character of a string
+		// upper case first non-space character of string
 		"upperFirst": func(s string) string {
-			if len(s) > 0 {
-				return strings.ToUpper(string(s[0])) + s[1:]
+			var retval = s
+			var rx = regexp.MustCompile("^(\\s*)(.)(\\w*)(.*)$")
+			var matches = rx.FindStringSubmatch(s)
+			if len(matches) > 1 {
+				retval = matches[1] + strings.ToUpper(matches[2]) + strings.ToLower(matches[3]) + matches[4]
 			}
-			return ""
+			return retval
 		},
 	}
 
