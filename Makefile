@@ -16,7 +16,7 @@ NAME = ## optional (defaults to name of parent directory)
 # spell-checker:ignore (abbrev/acronyms/names) MSVC
 # spell-checker:ignore (clang flags) flto Xclang Wextra Werror
 # spell-checker:ignore (flags) coverprofile
-# spell-checker:ignore (go) GOBIN GOPATH dep goverage
+# spell-checker:ignore (go) GOBIN GOPATH dep goverage golint
 # spell-checker:ignore (misc) brac cmdbuf forwback lessecho lesskey libcmt libpath linenum optfunc opttbl stdext ttyin
 # spell-checker:ignore (shell/nix) printf uname
 # spell-checker:ignore (shell/win) COMSPEC USERPROFILE delims findstr goawk mkdir
@@ -248,14 +248,22 @@ coverage: ## Display test coverage for project files
 	go tool cover -func="$(BUILD_DIR)$(/)cover.out"
 	@$(call xRM,"$(BUILD_DIR)$(/)cover.out")
 
+.PHONY: format
+format: ## `go fmt ...` ~ reformat source files
+	go fmt $(shell go list ./... | ${GREP} -v /vendor/)
+
 .PHONY: install
 install: ## Install project binary
 	@go install $(GO_BUILD_FLAGS) "./cmd/$(NAME)"
 	@echo $(SQUOTE)$(GOBIN)$(/)$(NAME)$(EXT)$(SQUOTE) created/installed
 
+.PHONY: lint
+lint: ## `golint ...` ~ display lint warnings for source files
+	golint $(shell go list ./... | ${GREP} -v /vendor/)
+
 .PHONY: test
 test: ## Test project
-	go test -v $(shell go list ./... | $(GREP) -v /vendor/)
+	go test -v $(shell go list ./... | ${GREP} -v /vendor/)
 
 ####
 
