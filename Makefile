@@ -2,7 +2,7 @@
 
 ## NOTE: requirements ...
 ## * windows ~ `awk`, `grep`, and `make`; use `scoop install gawk grep make`
-## * all platforms ~ `dep` and `goverage`; use `go get -u github.com/golang/dep/cmd/dep github.com/haya14busa/goverage`
+## * all platforms ~ `goverage`; use `go get -u github.com/haya14busa/goverage`
 
 NAME = ## optional (defaults to name of parent directory)
 
@@ -198,7 +198,7 @@ endif
 ####
 
 .PHONY: default
-default: clean deps test ## [*DEFAULT*] Build and test project
+default: clean test ## [*DEFAULT*] Build and test project
 
 ####
 
@@ -231,10 +231,6 @@ veryclean: realclean ## Remove *all* build artifacts and GOPATH installed binary
 rebuild: clean build ## Clean and rebuild project
 
 ####
-
-.PHONY: deps
-deps: ## Ensure/install dependencies
-	dep ensure -v
 
 .PHONY: build
 build: ## Build project
