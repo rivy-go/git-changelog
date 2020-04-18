@@ -10,6 +10,7 @@ import (
 	"strings"
 	"text/template"
 	"time"
+	"unicode"
 
 	gitcmd "github.com/tsuyoshiwada/go-gitcmd"
 )
@@ -347,6 +348,26 @@ func (gen *Generator) render(w io.Writer, unreleased *Unreleased, versions []*Ve
 			var matches = rx.FindStringSubmatch(s)
 			if len(matches) > 1 {
 				retval = matches[1] + strings.ToUpper(matches[2]) + strings.ToLower(matches[3]) + matches[4]
+			}
+			return retval
+		},
+		// lower case first word of string; "smart" == leave unchanged any word which has two+ upper case characters
+		"smartLowerFirstWord": func(s string) string {
+			var retval = s
+			var rx = regexp.MustCompile("^(\\s*)(\\w+)(.*)$")
+			var matches = rx.FindStringSubmatch(s)
+			if len(matches) > 1 {
+				var word = matches[2]
+				var upperN = 0
+				for _, rune := range word {
+					if rune == unicode.ToUpper(rune) {
+						upperN++
+					}
+				}
+				if upperN < 2 {
+					word = strings.ToLower(word)
+				}
+				retval = matches[1] + word + matches[3]
 			}
 			return retval
 		},
