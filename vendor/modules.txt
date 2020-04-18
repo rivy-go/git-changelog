@@ -1,0 +1,30 @@
+# github.com/davecgh/go-spew v1.1.0
+github.com/davecgh/go-spew/spew
+# github.com/fatih/color v1.6.0
+github.com/fatih/color
+# github.com/imdario/mergo v0.0.0-20180119215619-163f41321a19
+github.com/imdario/mergo
+# github.com/mattn/go-colorable v0.0.9
+github.com/mattn/go-colorable
+# github.com/mattn/go-isatty v0.0.3
+github.com/mattn/go-isatty
+# github.com/mgutz/ansi v0.0.0-20170206155736-9520e82c474b
+github.com/mgutz/ansi
+# github.com/pmezard/go-difflib v1.0.0
+github.com/pmezard/go-difflib/difflib
+# github.com/stretchr/testify v1.2.1
+github.com/stretchr/testify/assert
+# github.com/tsuyoshiwada/go-gitcmd v0.0.0-20180205145712-5f1f5f9475df
+github.com/tsuyoshiwada/go-gitcmd
+# github.com/urfave/cli v1.20.0
+github.com/urfave/cli
+# golang.org/x/sys v0.0.0-20180202135801-37707fdb30a5
+golang.org/x/sys/unix
+# gopkg.in/AlecAivazis/survey.v1 v1.4.2
+gopkg.in/AlecAivazis/survey.v1
+gopkg.in/AlecAivazis/survey.v1/core
+gopkg.in/AlecAivazis/survey.v1/terminal
+# gopkg.in/kyokomi/emoji.v1 v1.0.0-20161123144355-7e06b236c489
+gopkg.in/kyokomi/emoji.v1
+# gopkg.in/yaml.v2 v2.0.0
+gopkg.in/yaml.v2
