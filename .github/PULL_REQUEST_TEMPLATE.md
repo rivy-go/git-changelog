@@ -1,4 +1,4 @@
-<!-- Thank you for your contribution to git-chglog! Please replace {Please write here} with your description -->
+<!-- Thank you for your contribution to git-changelog! Please replace {Please write here} with your description -->
 
 
 ## What does this do / why do we need it?

@@ -24,5 +24,5 @@
 ## Your Environment
 
 - OS: {Please write here}
-- git-chglog version: {Please write here}
+- git-changelog version: {Please write here}
 

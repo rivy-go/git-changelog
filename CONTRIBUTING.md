@@ -1,6 +1,6 @@
-# Contributing `git-chglog`
+# Contributing `git-changelog`
 
-Thank you for contributing `git-chglog` :tada:
+Thank you for contributing `git-changelog` :tada:
 
 
 ## Templates
@@ -10,7 +10,7 @@ Please use issue/PR templates which are inserted automatically.
 
 ## Found a Bug?
 
-If you find a bug in the source code, you can help us by [submitting an issue](https://github.com/git-chglog/git-chglog/issues) to our [GitHub Repository](https://github.com/git-chglog/git-chglog). Even better, you can submit a Pull Request with a fix.
+If you find a bug in the source code, you can help us by [submitting an issue](https://github.com/rivy-go/git-changelog/issues) to our [GitHub Repository](https://github.com/rivy-go/git-changelog). Even better, you can submit a Pull Request with a fix.
 
 
 ## Commit Message Format

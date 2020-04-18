@@ -6,13 +6,13 @@
 <!-- spellchecker:ignore () ENVFILE godoc macos rivy CHANGELOG CHANGELOG's GitLab tsuyoshiwada chglog snippetization -->
 <!-- spellchecker:ignore (emoji) tada -->
 
-![git-chglog](https://raw.githubusercontent.com/git-chglog/artwork/master/repo-banner%402x.png)
+![git-changelog](https://raw.githubusercontent.com/git-changelog/artwork/master/repo-banner%402x.png)
 
-[![godoc.org](https://img.shields.io/badge/godoc-reference-blue.svg?style=flat-square)](https://godoc.org/github.com/git-chglog/git-chglog)
-[![Travis](https://img.shields.io/travis/git-chglog/git-chglog.svg?style=flat-square)](https://travis-ci.org/git-chglog/git-chglog)
-[![AppVeyor](https://img.shields.io/appveyor/ci/tsuyoshiwada/git-chglog/master.svg?style=flat-square)](https://ci.appveyor.com/project/tsuyoshiwada/git-chglog/branch/master)
-[![Coverage Status](https://img.shields.io/coveralls/github/git-chglog/git-chglog.svg?style=flat-square)](https://coveralls.io/github/git-chglog/git-chglog?branch=master)
-[![MIT License](http://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](https://github.com/git-chglog/git-chglog/blob/master/LICENSE)
+[![godoc.org](https://img.shields.io/badge/godoc-reference-blue.svg?style=flat-square)](https://godoc.org/github.com/rivy-go/git-changelog)
+[![Travis](https://img.shields.io/travis/rivy-go/git-changelog.svg?style=flat-square)](https://travis-ci.org/rivy-go/git-changelog)
+[![AppVeyor](https://img.shields.io/appveyor/ci/tsuyoshiwada/git-changelog/master.svg?style=flat-square)](https://ci.appveyor.com/project/tsuyoshiwada/git-changelog/branch/master)
+[![Coverage Status](https://img.shields.io/coveralls/github/rivy-go/git-changelog.svg?style=flat-square)](https://coveralls.io/github/rivy-go/git-changelog?branch=master)
+[![MIT License](http://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](https://github.com/rivy-go/git-changelog/blob/master/LICENSE)
 
 > CHANGELOG generator implemented in Go (Golang).
 > _Anytime, anywhere, Write your CHANGELOG._
@@ -48,7 +48,7 @@
   - It works with single binary. Therefore, any project (environment) can be used.
 * :beginner: Simple usability
   - The CLI usage is very simple and has low learning costs.
-  - For example, the simplest command is `$ git-chglog`.
+  - For example, the simplest command is `$ git-changelog`.
 * :rocket: High flexibility
   - Commit message format and ...
   - CHANGELOG's style (Template) and ...
@@ -56,7 +56,7 @@
 
 ## How it works
 
-`git-chglog` internally uses the `git` command to get data to include in the CHANGELOG.
+`git-changelog` internally uses the `git` command to get data to include in the CHANGELOG.
 The basic steps are as follows.
 
 1. Get all the tags.
@@ -69,50 +69,50 @@ We will start with installation and introduce the steps up to the automatic gene
 
 ### Installation
 
-Please install `git-chglog` in a way that matches your environment.
+Please install `git-changelog` in a way that matches your environment.
 
 #### [Homebrew](https://brew.sh) (for macOS users)
 
 ```bash
-$ brew tap git-chglog/git-chglog
-$ brew install git-chglog
+$ brew tap rivy-go/git-changelog
+$ brew install git-changelog
 ```
 
 #### [Scoop](https://scoop.sh) (for Windows users)
 
 ```shell
-$ scoop install git-chglog
+$ scoop install git-changelog
 ```
 
 #### Go users
 
 ```bash
-$ go get -u github.com/git-chglog/git-chglog/cmd/git-chglog
+$ go get -u github.com/rivy-go/git-changelog/cmd/git-changelog
 ```
 
 ---
 
-If you are using another platform, you can download a binary from the [releases page](https://github.com/git-chglog/git-chglog/releases) and place it in a directory in your `$PATH`.
+If you are using another platform, you can download a binary from the [releases page](https://github.com/rivy-go/git-changelog/releases) and place it in a directory in your `$PATH`.
 
 ### Test Installation
 
-You can check with the following command whether the `git-chglog` command was included in a directory that is in your `$PATH`.
+You can check with the following command whether the `git-changelog` command was included in a directory that is in your `$PATH`.
 
 ```bash
-$ git-chglog --version
-# outputs the git-chglog version
+$ git-changelog --version
+# outputs the git-changelog version
 ```
 
 ### Quick Start
 
-`git-chglog` requires configuration files and templates to generate a CHANGELOG.
+`git-changelog` requires configuration files and templates to generate a CHANGELOG.
 
 However, it is a waste of time to create configuration files and templates from scratch.
 
 Therefore we recommend using the `--init` option which will create them interactively :+1:
 
 ```bash
-$ git-chglog --init
+$ git-changelog --init
 ```
 
 ![init option demo](./docs/assets/init.gif)
@@ -125,28 +125,28 @@ Let's immediately generate a CHANGELOG of your project.
 By doing the following simple command, Markdown for your CHANGELOG is displayed on stdout.
 
 ```bash
-$ git-chglog
+$ git-changelog
 ```
 
 Use `-o` (`--output`) option if you want to output to a file instead of stdout.
 
 ```bash
-$ git-chglog -o CHANGELOG.md
+$ git-changelog -o CHANGELOG.md
 ```
 
 ---
 
-You now know basic usage of `git-chglog`!
+You now know basic usage of `git-changelog`!
 
 In order to make a better CHANGELOG, please refer to the following document and customize it.
 
 ## CLI Usage
 
 ```bash
-$ git-chglog --help
+$ git-changelog --help
 
 USAGE:
-  git-chglog [options] <tag query>
+  git-changelog [options] <tag query>
 
     There are the following specification methods for <tag query>.
 
@@ -156,8 +156,8 @@ USAGE:
     4. <name>       - Commit contained in <name>.
 
 OPTIONS:
-  --init                                generate the git-chglog configuration file in interactive
-  --config value, -c value              specifies a different configuration file to pick up (default: ".chglog/config.yml")
+  --init                                generate the git-changelog configuration file in interactive
+  --config value, -c value              specifies a different configuration file to pick up (default: ".changelog/config.yml")
   --output value, -o value              output path and filename for the changelog; if not specified, output to stdout
   --next-tag value                      treat unreleased commits as specified tags (EXPERIMENTAL)
   --silent                              disable stdout output
@@ -170,30 +170,30 @@ OPTIONS:
 
 EXAMPLE:
 
-  $ git-chglog
+  $ git-changelog
 
     If <tag query> is not specified, it corresponds to all tags.
     This is the simplest example.
 
-  $ git-chglog 1.0.0..2.0.0
+  $ git-changelog 1.0.0..2.0.0
 
     The above is a command to generate CHANGELOG including commit of 1.0.0 to 2.0.0.
 
-  $ git-chglog 1.0.0
+  $ git-changelog 1.0.0
 
     The above is a command to generate CHANGELOG including commit of only 1.0.0.
 
-  $ git-chglog $(git describe --tags $(git rev-list --tags --max-count=1))
+  $ git-changelog $(git describe --tags $(git rev-list --tags --max-count=1))
 
     The above is a command to generate CHANGELOG with the commit included in the latest tag.
 
-  $ git-chglog --output CHANGELOG.md
+  $ git-changelog --output CHANGELOG.md
 
     The above is a command to output to CHANGELOG.md instead of standard output.
 
-  $ git-chglog --config custom/dir/config.yml
+  $ git-changelog --config custom/dir/config.yml
 
-    The above is a command that uses a configuration file placed other than ".chglog/config.yml".
+    The above is a command that uses a configuration file placed other than ".changelog/config.yml".
 ```
 
 ### `tag query`
@@ -204,16 +204,16 @@ The table below shows Query patterns and summaries, and Query examples.
 
 | Query          | Description                                    | Example                     |
 |:---------------|:-----------------------------------------------|:----------------------------|
-| `<old>..<new>` | Commit contained in `<new>` tags from `<old>`. | `$ git-chglog 1.0.0..2.0.0` |
-| `<name>..`     | Commit from the `<name>` to the latest tag.    | `$ git-chglog 1.0.0..`      |
-| `..<name>`     | Commit from the oldest tag to `<name>`.        | `$ git-chglog ..2.0.0`      |
-| `<name>`       | Commit contained in `<name>`.                  | `$ git-chglog 1.0.0`        |
+| `<old>..<new>` | Commit contained in `<new>` tags from `<old>`. | `$ git-changelog 1.0.0..2.0.0` |
+| `<name>..`     | Commit from the `<name>` to the latest tag.    | `$ git-changelog 1.0.0..`      |
+| `..<name>`     | Commit from the oldest tag to `<name>`.        | `$ git-changelog ..2.0.0`      |
+| `<name>`       | Commit contained in `<name>`.                  | `$ git-changelog 1.0.0`        |
 
 ## Configuration
 
-The `git-chglog` configuration is a yaml file. The default location is `.chglog/config.yml`.
+The `git-changelog` configuration is a yaml file. The default location is `.changelog/config.yml`.
 
-Below is a complete list that you can use with `git-chglog`.
+Below is a complete list that you can use with `git-changelog`.
 
 ```yaml
 bin: git
@@ -221,7 +221,7 @@ style: ""
 template: CHANGELOG.tpl.md
 info:
   title: CHANGELOG
-  repository_url: https://github.com/git-chglog/git-chglog
+  repository_url: https://github.com/rivy-go/git-changelog
 
 options:
   commits:
@@ -309,7 +309,7 @@ Options concerning the acquisition and sort of commits.
 | Key       | Required | Type        | Default   | Description                                                                                                         |
 |:----------|:---------|:------------|:----------|:--------------------------------------------------------------------------------------------------------------------|
 | `filters` | N        | Map in List | none      | Filter by using `Commit` properties and values. Filtering is not done by specifying an empty value.                 |
-| `sort_by` | N        | String      | `"Scope"` | Property name to use for sorting `Commit`. See [Commit](https://godoc.org/github.com/git-chglog/git-chglog#Commit). |
+| `sort_by` | N        | String      | `"Scope"` | Property name to use for sorting `Commit`. See [Commit](https://godoc.org/github.com/rivy-go/git-changelog#Commit). |
 
 #### `options.commit_groups`
 
@@ -374,7 +374,7 @@ Options to detect notes contained in commit bodies.
 
 ## Templates
 
-The `git-chglog` template uses the `text/template` package. For basic usage please refer to the following.
+The `git-changelog` template uses the `text/template` package. For basic usage please refer to the following.
 
 > [text/template](https://golang.org/pkg/text/template/)
 
@@ -479,7 +479,7 @@ See the godoc [RenderData][doc-render-data] documentation for available variable
   You can create CHANGELOG containing `2.0.0` as follows.
 
   ```bash
-  $ git-chglog --next-tag 2.0.0 -o CHANGELOG.md
+  $ git-changelog --next-tag 2.0.0 -o CHANGELOG.md
   $ git commit -am "release 2.0.0"
   $ git tag 2.0.0
   ```
@@ -497,7 +497,7 @@ See the godoc [RenderData][doc-render-data] documentation for available variable
   For example, the following command will only include tags starting with "v":
 
   ```bash
-  $ git-chglog --tag-filter-pattern '^v'
+  $ git-changelog --tag-filter-pattern '^v'
   ```
 
 </details>
@@ -511,7 +511,7 @@ See the godoc [RenderData][doc-render-data] documentation for available variable
 
 ## Thanks
 
-`git-chglog` is inspired by [conventional-changelog](https://github.com/conventional-changelog/conventional-changelog). Thank you!
+`git-changelog` is inspired by [conventional-changelog](https://github.com/conventional-changelog/conventional-changelog). Thank you!
 
 ## Contributing
 
@@ -519,18 +519,18 @@ We alway welcome your contributions :clap:
 
 ### Development
 
-1. Fork <https://github.com/git-chglog/git-chglog> :tada:
+1. Fork <https://github.com/rivy-go/git-changelog> :tada:
 1. Create a feature branch :coffee:
 1. Run test suite with the `$ make test` command and confirm that it passes :zap:
 1. Commit your changes :memo:
 1. Rebase your local changes against the `master` branch :bulb:
 1. Create new Pull Request :love_letter:
 
-Bugs, feature requests and comments are more than welcome in the [issues](https://github.com/git-chglog/git-chglog/issues).
+Bugs, feature requests and comments are more than welcome in the [issues](https://github.com/rivy-go/git-changelog/issues).
 
 ### Feedback
 
-I would like to make `git-chglog` a better tool.
+I would like to make `git-changelog` a better tool.
 The goal is to be able to use in various projects.
 
 Therefore, your feedback is very useful.
@@ -542,13 +542,13 @@ See [CHANGELOG.md](./CHANGELOG.md)
 
 ## Related Projects
 
-* [git-chglog/artwork](https://github.com/git-chglog/artwork) - Assets for `git-chglog`.
+* [git-chglog/artwork](https://github.com/git-chglog/artwork) - Assets for `git-changelog` from `git-chglog`.
 
 ## License
 
 [MIT © tsuyoshiwada](./LICENSE)
 
-[doc-commit]: https://godoc.org/github.com/git-chglog/git-chglog#Commit
-[doc-commit-group]: https://godoc.org/github.com/git-chglog/git-chglog#Commit
-[doc-ref]: https://godoc.org/github.com/git-chglog/git-chglog#Ref
-[doc-render-data]: https://godoc.org/github.com/git-chglog/git-chglog#RenderData
+[doc-commit]: https://godoc.org/github.com/rivy-go/git-changelog#Commit
+[doc-commit-group]: https://godoc.org/github.com/rivy-go/git-changelog#Commit
+[doc-ref]: https://godoc.org/github.com/rivy-go/git-changelog#Ref
+[doc-render-data]: https://godoc.org/github.com/rivy-go/git-changelog#RenderData

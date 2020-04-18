@@ -1,4 +1,4 @@
-module github.com/rivy-go/git-chglog
+module github.com/rivy-go/git-changelog
 
 go 1.13
 

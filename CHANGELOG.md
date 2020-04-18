@@ -141,19 +141,19 @@ This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html
 - First implement
 
 
-[Unreleased]: https://github.com/git-chglog/git-chglog/compare/0.8.0...HEAD
-[0.9.1]: https://github.com/git-chglog/git-chglog/compare/0.9.0...0.9.1
-[0.9.0]: https://github.com/git-chglog/git-chglog/compare/0.8.0...0.9.0
-[0.8.0]: https://github.com/git-chglog/git-chglog/compare/0.7.1...0.8.0
-[0.7.1]: https://github.com/git-chglog/git-chglog/compare/0.7.0...0.7.1
-[0.7.0]: https://github.com/git-chglog/git-chglog/compare/0.6.0...0.7.0
-[0.6.0]: https://github.com/git-chglog/git-chglog/compare/0.5.0...0.6.0
-[0.5.0]: https://github.com/git-chglog/git-chglog/compare/0.4.0...0.5.0
-[0.4.0]: https://github.com/git-chglog/git-chglog/compare/0.3.3...0.4.0
-[0.3.3]: https://github.com/git-chglog/git-chglog/compare/0.3.2...0.3.3
-[0.3.2]: https://github.com/git-chglog/git-chglog/compare/0.3.1...0.3.2
-[0.3.1]: https://github.com/git-chglog/git-chglog/compare/0.3.0...0.3.1
-[0.3.0]: https://github.com/git-chglog/git-chglog/compare/0.2.0...0.3.0
-[0.2.0]: https://github.com/git-chglog/git-chglog/compare/0.1.0...0.2.0
-[0.1.0]: https://github.com/git-chglog/git-chglog/compare/0.0.2...0.1.0
-[0.0.2]: https://github.com/git-chglog/git-chglog/compare/0.0.1...0.0.2
+[Unreleased]: https://github.com/rivy-go/git-changelog/compare/0.8.0...HEAD
+[0.9.1]: https://github.com/rivy-go/git-changelog/compare/0.9.0...0.9.1
+[0.9.0]: https://github.com/rivy-go/git-changelog/compare/0.8.0...0.9.0
+[0.8.0]: https://github.com/rivy-go/git-changelog/compare/0.7.1...0.8.0
+[0.7.1]: https://github.com/rivy-go/git-changelog/compare/0.7.0...0.7.1
+[0.7.0]: https://github.com/rivy-go/git-changelog/compare/0.6.0...0.7.0
+[0.6.0]: https://github.com/rivy-go/git-changelog/compare/0.5.0...0.6.0
+[0.5.0]: https://github.com/rivy-go/git-changelog/compare/0.4.0...0.5.0
+[0.4.0]: https://github.com/rivy-go/git-changelog/compare/0.3.3...0.4.0
+[0.3.3]: https://github.com/rivy-go/git-changelog/compare/0.3.2...0.3.3
+[0.3.2]: https://github.com/rivy-go/git-changelog/compare/0.3.1...0.3.2
+[0.3.1]: https://github.com/rivy-go/git-changelog/compare/0.3.0...0.3.1
+[0.3.0]: https://github.com/rivy-go/git-changelog/compare/0.2.0...0.3.0
+[0.2.0]: https://github.com/rivy-go/git-changelog/compare/0.1.0...0.2.0
+[0.1.0]: https://github.com/rivy-go/git-changelog/compare/0.0.2...0.1.0
+[0.0.2]: https://github.com/rivy-go/git-changelog/compare/0.0.1...0.0.2

@@ -8,7 +8,7 @@ NAME = ## optional (defaults to name of parent directory)
 
 ####
 
-# spell-checker:ignore () busa chglog haya haya14busa
+# spell-checker:ignore () busa changelog haya haya14busa
 # spell-checker:ignore (targets) deps realclean veryclean
 # spell-checker:ignore (make) abspath addprefix addsuffix endef findstring firstword ifeq ifneq lastword undefine notdir
 #
@@ -264,5 +264,5 @@ test: ## Test project
 ####
 
 .PHONY: changelog
-changelog: ## `git-chglog --next-tag $TAG $TAG` ~ create CHANGELOG for planned next tag (requires $TAG)
-	@git-chglog --next-tag $(TAG) $(TAG)
+changelog: ## `git-changelog --next-tag $TAG $TAG` ~ create CHANGELOG for planned next tag (requires $TAG)
+	@git-changelog --next-tag $(TAG) $(TAG)
