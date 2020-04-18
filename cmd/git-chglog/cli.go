@@ -8,7 +8,7 @@ import (
 
 	"github.com/fatih/color"
 
-	chglog "github.com/rivy-go/git-chglog"
+	chglog "github.com/rivy-go/git-chglog/internal/chglog"
 )
 
 // CLI ...

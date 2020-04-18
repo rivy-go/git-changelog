@@ -10,7 +10,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	chglog "github.com/rivy-go/git-chglog"
+	chglog "github.com/rivy-go/git-chglog/internal/chglog"
 )
 
 func TestCLIForStdout(t *testing.T) {

@@ -3,7 +3,7 @@ package main
 import (
 	"testing"
 
-	chglog "github.com/rivy-go/git-chglog"
+	chglog "github.com/rivy-go/git-chglog/internal/chglog"
 	"github.com/stretchr/testify/assert"
 )
 

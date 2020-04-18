@@ -6,7 +6,7 @@ import (
 
 	"github.com/imdario/mergo"
 
-	chglog "github.com/rivy-go/git-chglog"
+	chglog "github.com/rivy-go/git-chglog/internal/chglog"
 )
 
 // Info ...

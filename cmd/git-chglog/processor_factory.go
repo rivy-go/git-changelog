@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"net/url"
 
-	chglog "github.com/rivy-go/git-chglog"
+	chglog "github.com/rivy-go/git-chglog/internal/chglog"
 )
 
 // ProcessorFactory ...

@@ -3,7 +3,7 @@ package main
 import (
 	"io"
 
-	chglog "github.com/rivy-go/git-chglog"
+	chglog "github.com/rivy-go/git-chglog/internal/chglog"
 )
 
 // Generator ...
