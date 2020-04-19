@@ -8,22 +8,21 @@
 [![Coverage Status](https://img.shields.io/coveralls/github/git-chglog/git-chglog.svg?style=flat-square)](https://coveralls.io/github/git-chglog/git-chglog?branch=master)
 [![MIT License](http://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](https://github.com/git-chglog/git-chglog/blob/master/LICENSE)
 
-> CHANGELOG generator implemented in Go (Golang).  
+> CHANGELOG generator implemented in Go (Golang).
 > _Anytime, anywhere, Write your CHANGELOG._
-
 
 ## Table of Contents
 
 * [Features](#features)
 * [How it works](#how-it-works)
 * [Getting Started](#getting-started)
-    - [Installation](#installation)
-        + [Homebrew (for macOS users)](#homebrew-for-macos-users)
-        + [Go users](#go-users)
-    - [Test Installation](#test-installation)
-    - [Quick Start](#quick-start)
+  - [Installation](#installation)
+    + [Homebrew (for macOS users)](#homebrew-for-macos-users)
+    + [Go users](#go-users)
+  - [Test Installation](#test-installation)
+  - [Quick Start](#quick-start)
 * [CLI Usage](#cli-usage)
-    - [`tag query`](#tag-query)
+  - [`tag query`](#tag-query)
 * [Configuration](#configuration)
 * [Templates](#templates)
 * [Supported Styles](#supported-styles)
@@ -31,30 +30,27 @@
 * [TODO](#todo)
 * [Thanks](#thanks)
 * [Contributing](#contributing)
-    - [Development](#development)
-    - [Feedback](#feedback)
+  - [Development](#development)
+  - [Feedback](#feedback)
 * [CHANGELOG](#changelog)
 * [Related Projects](#related-projects)
 * [License](#license)
 
-
-
-
 ## Features
 
 * :recycle: High portability
-    - It works with single binary. Therefore, any project (environment) can be used.
+  - It works with single binary. Therefore, any project (environment) can be used.
 * :beginner: Simple usability
-    - The CLI usage is very simple and has low learning costs.
-    - For example, the simplest command is `$ git-chglog`.
+  - The CLI usage is very simple and has low learning costs.
+  - For example, the simplest command is `$ git-chglog`.
 * :rocket: High flexibility
-    - Commit message format and ...
-    - CHANGELOG's style (Template) and ...
-    - etc ...
+  - Commit message format and ...
+  - CHANGELOG's style (Template) and ...
+  - etc ...
 
 ## How it works
 
-`git-chglog` internally uses the `git` command to get data to include in the CHANGELOG.  
+`git-chglog` internally uses the `git` command to get data to include in the CHANGELOG.
 The basic steps are as follows.
 
 1. Get all the tags.
@@ -92,7 +88,6 @@ $ go get -u github.com/git-chglog/git-chglog/cmd/git-chglog
 
 If you are using another platform, you can download a binary from the [releases page](https://github.com/git-chglog/git-chglog/releases) and place it in a directory in your `$PATH`.
 
-
 ### Test Installation
 
 You can check with the following command whether the `git-chglog` command was included in a directory that is in your `$PATH`.
@@ -102,10 +97,9 @@ $ git-chglog --version
 # outputs the git-chglog version
 ```
 
-
 ### Quick Start
 
-`git-chglog` requires configuration files and templates to generate a CHANGELOG.  
+`git-chglog` requires configuration files and templates to generate a CHANGELOG.
 
 However, it is a waste of time to create configuration files and templates from scratch.
 
@@ -121,7 +115,7 @@ $ git-chglog --init
 
 You are now ready for configuration files and templates!
 
-Let's immediately generate a CHANGELOG of your project.  
+Let's immediately generate a CHANGELOG of your project.
 By doing the following simple command, Markdown for your CHANGELOG is displayed on stdout.
 
 ```bash
@@ -465,7 +459,7 @@ See the godoc [RenderData][doc-render-data] documentation for available variable
 
   It is ideal to describe everything included in CHANGELOG in your commits. But actually it is very difficult to do it perfectly.
 
-  There are times when you need to edit the generated output to write a great CHANGELOG.  
+  There are times when you need to edit the generated output to write a great CHANGELOG.
 
   By displaying it on the standard output, it makes it easy to change the contents.
 </details>
@@ -475,7 +469,7 @@ See the godoc [RenderData][doc-render-data] documentation for available variable
 
   Yes, it can be solved by using the `--next-tag` flag.
 
-  For example, let's say you want to upgrade your project to `2.0.0`.  
+  For example, let's say you want to upgrade your project to `2.0.0`.
   You can create CHANGELOG containing `2.0.0` as follows.
 
   ```bash
@@ -491,9 +485,9 @@ See the godoc [RenderData][doc-render-data] documentation for available variable
 
 <details>
   <summary>Can I generate a CHANGELOG based on certain tags?</summary>
-  
+
   Yes, it can be solved by use the `--tag-filter-pattern` flag.
-  
+
   For example, the following command will only include tags starting with "v":
   ```bash
   $ git-chglog --tag-filter-pattern '^v'
@@ -528,10 +522,10 @@ Bugs, feature requests and comments are more than welcome in the [issues](https:
 
 ### Feedback
 
-I would like to make `git-chglog` a better tool.  
+I would like to make `git-chglog` a better tool.
 The goal is to be able to use in various projects.
 
-Therefore, your feedback is very useful.  
+Therefore, your feedback is very useful.
 I am very happy to tell you your opinions on Issues and PR :heart:
 
 ## CHANGELOG
