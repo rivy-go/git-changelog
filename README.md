@@ -1,4 +1,10 @@
-# git-chglog
+<!DOCTYPE markdown><!-- markdownlint-disable first-line-h1 --><!-- spellchecker:ignore markdownlint -->
+
+# git-changelog
+
+<!-- markdownlint-disable ul-style no-inline-html commands-show-output -->
+<!-- spellchecker:ignore () ENVFILE godoc macos rivy CHANGELOG CHANGELOG's GitLab tsuyoshiwada chglog snippetization -->
+<!-- spellchecker:ignore (emoji) tada -->
 
 ![git-chglog](https://raw.githubusercontent.com/git-chglog/artwork/master/repo-banner%402x.png)
 
@@ -74,7 +80,7 @@ $ brew install git-chglog
 
 #### [Scoop](https://scoop.sh) (for Windows users)
 
-```
+```shell
 $ scoop install git-chglog
 ```
 
@@ -152,13 +158,13 @@ USAGE:
 OPTIONS:
   --init                                generate the git-chglog configuration file in interactive
   --config value, -c value              specifies a different configuration file to pick up (default: ".chglog/config.yml")
-  --output value, -o value              output path and filename for the changelogs. If not specified, output to stdout
+  --output value, -o value              output path and filename for the changelog; if not specified, output to stdout
   --next-tag value                      treat unreleased commits as specified tags (EXPERIMENTAL)
   --silent                              disable stdout output
   --no-color                            disable color output [$NO_COLOR]
   --no-emoji                            disable emoji output [$NO_EMOJI]
   --no-case                             disable case sensitive filters
-  --tag-filter-pattern value, -p value  regular expression of tag filter. Is specified, only matched tags will be picked
+  --tag-filter-pattern value, -p value  regular expression of tag filter; if specified, only matched tags will be picked
   --help, -h                            show help
   --version, -v                         print the version
 
@@ -489,9 +495,11 @@ See the godoc [RenderData][doc-render-data] documentation for available variable
   Yes, it can be solved by use the `--tag-filter-pattern` flag.
 
   For example, the following command will only include tags starting with "v":
+
   ```bash
   $ git-chglog --tag-filter-pattern '^v'
   ```
+
 </details>
 
 ## TODO
@@ -511,7 +519,7 @@ We alway welcome your contributions :clap:
 
 ### Development
 
-1. Fork (https://github.com/git-chglog/git-chglog) :tada:
+1. Fork <https://github.com/git-chglog/git-chglog> :tada:
 1. Create a feature branch :coffee:
 1. Run test suite with the `$ make test` command and confirm that it passes :zap:
 1. Commit your changes :memo:
