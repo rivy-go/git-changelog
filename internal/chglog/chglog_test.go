@@ -173,88 +173,88 @@ func TestGeneratorNotFoundCommitsOne(t *testing.T) {
 }
 
 // func TestGeneratorWithTypeScopeSubject(t *testing.T) {
-// 	assert := assert.New(t)
-// 	testName := "type_scope_subject"
+//  assert := assert.New(t)
+//  testName := "type_scope_subject"
 
-// 	setup(testName, func(commit commitFunc, tag tagFunc, _ gitcmd.Client) {
-// 		commit("2018-01-01 00:00:00", "chore(*): First commit", "")
-// 		commit("2018-01-01 00:01:00", "feat(core): Add foo bar", "")
-// 		commit("2018-01-01 00:02:00", "docs(readme): Update usage #123", "")
-// 		tag("1.0.0")
+//  setup(testName, func(commit commitFunc, tag tagFunc, _ gitcmd.Client) {
+//      commit("2018-01-01 00:00:00", "chore(*): First commit", "")
+//      commit("2018-01-01 00:01:00", "feat(core): Add foo bar", "")
+//      commit("2018-01-01 00:02:00", "docs(readme): Update usage #123", "")
+//      tag("1.0.0")
 
-// 		commit("2018-01-02 00:00:00", "feat(parser): New some super options #333", "")
-// 		commit("2018-01-02 00:01:00", "Merge pull request #999 from tsuyoshiwada/patch-1", "")
-// 		commit("2018-01-02 00:02:00", "Merge pull request #1000 from tsuyoshiwada/patch-1", "")
-// 		commit("2018-01-02 00:03:00", "Revert \"feat(core): Add foo bar @mention and issue #987\"", "")
-// 		tag("1.1.0")
+//      commit("2018-01-02 00:00:00", "feat(parser): New some super options #333", "")
+//      commit("2018-01-02 00:01:00", "Merge pull request #999 from tsuyoshiwada/patch-1", "")
+//      commit("2018-01-02 00:02:00", "Merge pull request #1000 from tsuyoshiwada/patch-1", "")
+//      commit("2018-01-02 00:03:00", "Revert \"feat(core): Add foo bar @mention and issue #987\"", "")
+//      tag("1.1.0")
 
-// 		commit("2018-01-03 00:00:00", "feat(context): Online breaking change", "BREAKING CHANGE: Online breaking change message.")
-// 		commit("2018-01-03 00:01:00", "feat(router): Muliple breaking change", `This is body,
+//      commit("2018-01-03 00:00:00", "feat(context): Online breaking change", "BREAKING CHANGE: Online breaking change message.")
+//      commit("2018-01-03 00:01:00", "feat(router): Muliple breaking change", `This is body,
 
 // BREAKING CHANGE:
 // Multiple
 // breaking
 // change message.`)
-// 		tag("2.0.0-beta.0")
+//      tag("2.0.0-beta.0")
 
-// 		commit("2018-01-04 00:00:00", "refactor(context): gofmt", "")
-// 		commit("2018-01-04 00:01:00", "fix(core): Fix commit\n\nThis is body message.", "")
-// 	})
+//      commit("2018-01-04 00:00:00", "refactor(context): gofmt", "")
+//      commit("2018-01-04 00:01:00", "fix(core): Fix commit\n\nThis is body message.", "")
+//  })
 
-// 	gen := NewGenerator(&Config{
-// 		Bin:        "git",
-// 		WorkingDir: filepath.Join(testRepoRoot, testName),
-// 		Template:   filepath.Join(cwd, "testdata", testName+".md"),
-// 		Info: &Info{
-// 			Title:         "CHANGELOG Example",
-// 			RepositoryURL: "https://github.com/git-chglog/git-chglog",
-// 		},
-// 		Options: &Options{
-// 			CommitFilters: map[string][]string{
-// 				"Type": []string{
-// 					"feat",
-// 					"fix",
-// 				},
-// 			},
-// 			CommitSortBy:      "Scope",
-// 			CommitGroupBy:     "Type",
-// 			CommitGroupSortBy: "Title",
-// 			CommitGroupTitleMaps: map[string]string{
-// 				"feat": "Features",
-// 				"fix":  "Bug Fixes",
-// 			},
-// 			HeaderPattern: "^(\\w*)(?:\\(([\\w\\$\\.\\-\\*\\s]*)\\))?\\:\\s(.*)$",
-// 			HeaderPatternMaps: []string{
-// 				"Type",
-// 				"Scope",
-// 				"Subject",
-// 			},
-// 			IssuePrefix: []string{
-// 				"#",
-// 				"gh-",
-// 			},
-// 			RefActions:   []string{},
-// 			MergePattern: "^Merge pull request #(\\d+) from (.*)$",
-// 			MergePatternMaps: []string{
-// 				"Ref",
-// 				"Source",
-// 			},
-// 			RevertPattern: "^Revert \"([\\s\\S]*)\"$",
-// 			RevertPatternMaps: []string{
-// 				"Header",
-// 			},
-// 			NoteKeywords: []string{
-// 				"BREAKING CHANGE",
-// 			},
-// 		},
-// 	})
+//  gen := NewGenerator(&Config{
+//      Bin:        "git",
+//      WorkingDir: filepath.Join(testRepoRoot, testName),
+//      Template:   filepath.Join(cwd, "testdata", testName+".md"),
+//      Info: &Info{
+//          Title:         "CHANGELOG Example",
+//          RepositoryURL: "https://github.com/git-chglog/git-chglog",
+//      },
+//      Options: &Options{
+//          CommitFilters: map[string][]string{
+//              "Type": []string{
+//                  "feat",
+//                  "fix",
+//              },
+//          },
+//          CommitSortBy:      "Scope",
+//          CommitGroupBy:     "Type",
+//          CommitGroupSortBy: "Title",
+//          CommitGroupTitleMaps: map[string]string{
+//              "feat": "Features",
+//              "fix":  "Bug Fixes",
+//          },
+//          HeaderPattern: "^(\\w*)(?:\\(([\\w\\$\\.\\-\\*\\s]*)\\))?\\:\\s(.*)$",
+//          HeaderPatternMaps: []string{
+//              "Type",
+//              "Scope",
+//              "Subject",
+//          },
+//          IssuePrefix: []string{
+//              "#",
+//              "gh-",
+//          },
+//          RefActions:   []string{},
+//          MergePattern: "^Merge pull request #(\\d+) from (.*)$",
+//          MergePatternMaps: []string{
+//              "Ref",
+//              "Source",
+//          },
+//          RevertPattern: "^Revert \"([\\s\\S]*)\"$",
+//          RevertPatternMaps: []string{
+//              "Header",
+//          },
+//          NoteKeywords: []string{
+//              "BREAKING CHANGE",
+//          },
+//      },
+//  })
 
-// 	buf := &bytes.Buffer{}
-// 	err := gen.Generate(buf, "")
-// 	output := strings.Replace(strings.TrimSpace(buf.String()), "\r\n", "\n", -1)
+//  buf := &bytes.Buffer{}
+//  err := gen.Generate(buf, "")
+//  output := strings.Replace(strings.TrimSpace(buf.String()), "\r\n", "\n", -1)
 
-// 	assert.Nil(err)
-// 	assert.Equal(`<a name="unreleased"></a>
+//  assert.Nil(err)
+//  assert.Equal(`<a name="unreleased"></a>
 // ## [Unreleased]
 
 // ### Bug Fixes
