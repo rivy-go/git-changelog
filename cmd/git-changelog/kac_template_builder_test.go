@@ -1,25 +1,25 @@
 package main
 
 import (
-	"testing"
+    "testing"
 
-	"github.com/stretchr/testify/assert"
+    "github.com/stretchr/testify/assert"
 )
 
 func TestKACTemplateBuilderDefault(t *testing.T) {
-	assert := assert.New(t)
-	builder := NewKACTemplateBuilder()
+    assert := assert.New(t)
+    builder := NewKACTemplateBuilder()
 
-	out, err := builder.Build(&Answer{
-		Style:               styleGitHub,
-		CommitMessageFormat: fmtTypeScopeSubject.display,
-		Template:            tplKeepAChangelog.display,
-		IncludeMerges:       true,
-		IncludeReverts:      true,
-	})
+    out, err := builder.Build(&Answer{
+        Style:               styleGitHub,
+        CommitMessageFormat: fmtTypeScopeSubject.display,
+        Template:            tplKeepAChangelog.display,
+        IncludeMerges:       true,
+        IncludeReverts:      true,
+    })
 
-	assert.Nil(err)
-	assert.Equal(`{{ if .Versions -}}
+    assert.Nil(err)
+    assert.Equal(`{{ if .Versions -}}
 <a name="unreleased"></a>
 ## [Unreleased]
 
@@ -78,19 +78,19 @@ func TestKACTemplateBuilderDefault(t *testing.T) {
 }
 
 func TestKACTemplateBuilderNone(t *testing.T) {
-	assert := assert.New(t)
-	builder := NewKACTemplateBuilder()
+    assert := assert.New(t)
+    builder := NewKACTemplateBuilder()
 
-	out, err := builder.Build(&Answer{
-		Style:               styleNone,
-		CommitMessageFormat: fmtTypeScopeSubject.display,
-		Template:            tplKeepAChangelog.display,
-		IncludeMerges:       true,
-		IncludeReverts:      true,
-	})
+    out, err := builder.Build(&Answer{
+        Style:               styleNone,
+        CommitMessageFormat: fmtTypeScopeSubject.display,
+        Template:            tplKeepAChangelog.display,
+        IncludeMerges:       true,
+        IncludeReverts:      true,
+    })
 
-	assert.Nil(err)
-	assert.Equal(`{{ if .Versions -}}
+    assert.Nil(err)
+    assert.Equal(`{{ if .Versions -}}
 ## Unreleased
 
 {{ if .Unreleased.CommitGroups -}}
@@ -138,19 +138,19 @@ func TestKACTemplateBuilderNone(t *testing.T) {
 }
 
 func TestKACTemplateBuilderSubject(t *testing.T) {
-	assert := assert.New(t)
-	builder := NewKACTemplateBuilder()
+    assert := assert.New(t)
+    builder := NewKACTemplateBuilder()
 
-	out, err := builder.Build(&Answer{
-		Style:               styleNone,
-		CommitMessageFormat: fmtSubject.display,
-		Template:            tplKeepAChangelog.display,
-		IncludeMerges:       true,
-		IncludeReverts:      true,
-	})
+    out, err := builder.Build(&Answer{
+        Style:               styleNone,
+        CommitMessageFormat: fmtSubject.display,
+        Template:            tplKeepAChangelog.display,
+        IncludeMerges:       true,
+        IncludeReverts:      true,
+    })
 
-	assert.Nil(err)
-	assert.Equal(`{{ if .Versions -}}
+    assert.Nil(err)
+    assert.Equal(`{{ if .Versions -}}
 ## Unreleased
 
 {{ if .Unreleased.CommitGroups -}}

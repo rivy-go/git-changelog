@@ -1,60 +1,60 @@
 package changelog
 
 import (
-	"strings"
+    "strings"
 )
 
 func commitFilter(commits []*Commit, filters map[string][]string, noCaseSensitive bool) []*Commit {
-	res := []*Commit{}
+    res := []*Commit{}
 
-	for _, commit := range commits {
-		include := false
+    for _, commit := range commits {
+        include := false
 
-		if len(filters) == 0 {
-			include = true
-		}
+        if len(filters) == 0 {
+            include = true
+        }
 
-		for key, values := range filters {
-			prop, ok := dotGet(commit, key)
-			if !ok {
-				include = false
-				break
-			}
+        for key, values := range filters {
+            prop, ok := dotGet(commit, key)
+            if !ok {
+                include = false
+                break
+            }
 
-			str, ok := prop.(string)
-			if !ok {
-				include = false
-				break
-			}
+            str, ok := prop.(string)
+            if !ok {
+                include = false
+                break
+            }
 
-			if noCaseSensitive {
-				str = strings.ToLower(str)
-			}
+            if noCaseSensitive {
+                str = strings.ToLower(str)
+            }
 
-			exist := false
+            exist := false
 
-			for _, val := range values {
-				if noCaseSensitive {
-					val = strings.ToLower(val)
-				}
+            for _, val := range values {
+                if noCaseSensitive {
+                    val = strings.ToLower(val)
+                }
 
-				if str == val {
-					exist = true
-				}
-			}
+                if str == val {
+                    exist = true
+                }
+            }
 
-			if !exist {
-				include = false
-				break
-			}
+            if !exist {
+                include = false
+                break
+            }
 
-			include = true
-		}
+            include = true
+        }
 
-		if include {
-			res = append(res, commit)
-		}
-	}
+        if include {
+            res = append(res, commit)
+        }
+    }
 
-	return res
+    return res
 }

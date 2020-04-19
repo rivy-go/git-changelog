@@ -1,175 +1,175 @@
 package changelog
 
 import (
-	"bytes"
-	"os"
-	"path/filepath"
-	"strings"
-	"testing"
-	"time"
+    "bytes"
+    "os"
+    "path/filepath"
+    "strings"
+    "testing"
+    "time"
 
-	"github.com/stretchr/testify/assert"
-	gitcmd "github.com/tsuyoshiwada/go-gitcmd"
+    "github.com/stretchr/testify/assert"
+    gitcmd "github.com/tsuyoshiwada/go-gitcmd"
 )
 
 var (
-	cwd                string
-	testRepoRoot       = ".tmp"
-	internalTimeFormat = "2006-01-02 15:04:05"
+    cwd                string
+    testRepoRoot       = ".tmp"
+    internalTimeFormat = "2006-01-02 15:04:05"
 )
 
 type commitFunc = func(date, subject, body string)
 type tagFunc = func(name string)
 
 func TestMain(m *testing.M) {
-	cwd, _ = os.Getwd()
-	cleanup()
-	code := m.Run()
-	cleanup()
-	os.Exit(code)
+    cwd, _ = os.Getwd()
+    cleanup()
+    code := m.Run()
+    cleanup()
+    os.Exit(code)
 }
 
 func setup(dir string, setupRepo func(commitFunc, tagFunc, gitcmd.Client)) {
-	testDir := filepath.Join(cwd, testRepoRoot, dir)
+    testDir := filepath.Join(cwd, testRepoRoot, dir)
 
-	os.RemoveAll(testDir)
-	os.MkdirAll(testDir, os.ModePerm)
-	os.Chdir(testDir)
+    os.RemoveAll(testDir)
+    os.MkdirAll(testDir, os.ModePerm)
+    os.Chdir(testDir)
 
-	loc, _ := time.LoadLocation("UTC")
-	time.Local = loc
+    loc, _ := time.LoadLocation("UTC")
+    time.Local = loc
 
-	git := gitcmd.New(nil)
-	git.Exec("init")
-	git.Exec("config", "user.name", "test_user")
-	git.Exec("config", "user.email", "test@example.com")
+    git := gitcmd.New(nil)
+    git.Exec("init")
+    git.Exec("config", "user.name", "test_user")
+    git.Exec("config", "user.email", "test@example.com")
 
-	var commit = func(date, subject, body string) {
-		msg := subject
-		if body != "" {
-			msg += "\n\n" + body
-		}
-		t, _ := time.Parse(internalTimeFormat, date)
-		d := t.Format("Mon Jan 2 15:04:05 2006 +0000")
-		git.Exec("commit", "--allow-empty", "--date", d, "-m", msg)
-	}
+    var commit = func(date, subject, body string) {
+        msg := subject
+        if body != "" {
+            msg += "\n\n" + body
+        }
+        t, _ := time.Parse(internalTimeFormat, date)
+        d := t.Format("Mon Jan 2 15:04:05 2006 +0000")
+        git.Exec("commit", "--allow-empty", "--date", d, "-m", msg)
+    }
 
-	var tag = func(name string) {
-		git.Exec("tag", name)
-	}
+    var tag = func(name string) {
+        git.Exec("tag", name)
+    }
 
-	setupRepo(commit, tag, git)
+    setupRepo(commit, tag, git)
 
-	os.Chdir(cwd)
+    os.Chdir(cwd)
 }
 
 func cleanup() {
-	os.Chdir(cwd)
-	os.RemoveAll(filepath.Join(cwd, testRepoRoot))
+    os.Chdir(cwd)
+    os.RemoveAll(filepath.Join(cwd, testRepoRoot))
 }
 
 func TestGeneratorNotFoundTags(t *testing.T) {
-	assert := assert.New(t)
-	testName := "not_found"
+    assert := assert.New(t)
+    testName := "not_found"
 
-	setup(testName, func(commit commitFunc, _ tagFunc, _ gitcmd.Client) {
-		commit("2018-01-01 00:00:00", "feat(*): New feature", "")
-	})
+    setup(testName, func(commit commitFunc, _ tagFunc, _ gitcmd.Client) {
+        commit("2018-01-01 00:00:00", "feat(*): New feature", "")
+    })
 
-	gen := NewGenerator(&Config{
-		Bin:        "git",
-		WorkingDir: filepath.Join(testRepoRoot, testName),
-		Template:   filepath.Join(cwd, "testdata", testName+".md"),
-		Info: &Info{
-			RepositoryURL: "https://github.com/rivy-go/git-changelog",
-		},
-		Options: &Options{},
-	})
+    gen := NewGenerator(&Config{
+        Bin:        "git",
+        WorkingDir: filepath.Join(testRepoRoot, testName),
+        Template:   filepath.Join(cwd, "testdata", testName+".md"),
+        Info: &Info{
+            RepositoryURL: "https://github.com/rivy-go/git-changelog",
+        },
+        Options: &Options{},
+    })
 
-	buf := &bytes.Buffer{}
-	err := gen.Generate(buf, "")
-	assert.Nil(err)
-	assert.Equal("", buf.String())
+    buf := &bytes.Buffer{}
+    err := gen.Generate(buf, "")
+    assert.Nil(err)
+    assert.Equal("", buf.String())
 }
 
 func TestGeneratorNotFoundCommits(t *testing.T) {
-	assert := assert.New(t)
-	testName := "not_found"
+    assert := assert.New(t)
+    testName := "not_found"
 
-	setup(testName, func(commit commitFunc, tag tagFunc, _ gitcmd.Client) {
-		commit("2018-01-01 00:00:00", "feat(*): New feature", "")
-		tag("1.0.0")
-	})
+    setup(testName, func(commit commitFunc, tag tagFunc, _ gitcmd.Client) {
+        commit("2018-01-01 00:00:00", "feat(*): New feature", "")
+        tag("1.0.0")
+    })
 
-	gen := NewGenerator(&Config{
-		Bin:        "git",
-		WorkingDir: filepath.Join(testRepoRoot, testName),
-		Template:   filepath.Join(cwd, "testdata", testName+".md"),
-		Info: &Info{
-			RepositoryURL: "https://github.com/rivy-go/git-changelog",
-		},
-		Options: &Options{},
-	})
+    gen := NewGenerator(&Config{
+        Bin:        "git",
+        WorkingDir: filepath.Join(testRepoRoot, testName),
+        Template:   filepath.Join(cwd, "testdata", testName+".md"),
+        Info: &Info{
+            RepositoryURL: "https://github.com/rivy-go/git-changelog",
+        },
+        Options: &Options{},
+    })
 
-	buf := &bytes.Buffer{}
-	err := gen.Generate(buf, "foo")
-	assert.Error(err)
-	assert.Equal("", buf.String())
+    buf := &bytes.Buffer{}
+    err := gen.Generate(buf, "foo")
+    assert.Error(err)
+    assert.Equal("", buf.String())
 }
 
 func TestGeneratorNotFoundCommitsOne(t *testing.T) {
-	assert := assert.New(t)
-	testName := "not_found"
+    assert := assert.New(t)
+    testName := "not_found"
 
-	setup(testName, func(commit commitFunc, tag tagFunc, _ gitcmd.Client) {
-		commit("2018-01-01 00:00:00", "chore(*): First commit", "")
-		tag("1.0.0")
-	})
+    setup(testName, func(commit commitFunc, tag tagFunc, _ gitcmd.Client) {
+        commit("2018-01-01 00:00:00", "chore(*): First commit", "")
+        tag("1.0.0")
+    })
 
-	gen := NewGenerator(&Config{
-		Bin:        "git",
-		WorkingDir: filepath.Join(testRepoRoot, testName),
-		Template:   filepath.Join(cwd, "testdata", testName+".md"),
-		Info: &Info{
-			RepositoryURL: "https://github.com/rivy-go/git-changelog",
-		},
-		Options: &Options{
-			CommitFilters:        map[string][]string{},
-			CommitSortBy:         "Scope",
-			CommitGroupBy:        "Type",
-			CommitGroupSortBy:    "Title",
-			CommitGroupTitleMaps: map[string]string{},
-			HeaderPattern:        "^(\\w*)(?:\\(([\\w\\$\\.\\-\\*\\s]*)\\))?\\:\\s(.*)$",
-			HeaderPatternMaps: []string{
-				"Type",
-				"Scope",
-				"Subject",
-			},
-			IssuePrefix: []string{
-				"#",
-				"gh-",
-			},
-			RefActions:   []string{},
-			MergePattern: "^Merge pull request #(\\d+) from (.*)$",
-			MergePatternMaps: []string{
-				"Ref",
-				"Source",
-			},
-			RevertPattern: "^Revert \"([\\s\\S]*)\"$",
-			RevertPatternMaps: []string{
-				"Header",
-			},
-			NoteKeywords: []string{
-				"BREAKING CHANGE",
-			},
-		},
-	})
+    gen := NewGenerator(&Config{
+        Bin:        "git",
+        WorkingDir: filepath.Join(testRepoRoot, testName),
+        Template:   filepath.Join(cwd, "testdata", testName+".md"),
+        Info: &Info{
+            RepositoryURL: "https://github.com/rivy-go/git-changelog",
+        },
+        Options: &Options{
+            CommitFilters:        map[string][]string{},
+            CommitSortBy:         "Scope",
+            CommitGroupBy:        "Type",
+            CommitGroupSortBy:    "Title",
+            CommitGroupTitleMaps: map[string]string{},
+            HeaderPattern:        "^(\\w*)(?:\\(([\\w\\$\\.\\-\\*\\s]*)\\))?\\:\\s(.*)$",
+            HeaderPatternMaps: []string{
+                "Type",
+                "Scope",
+                "Subject",
+            },
+            IssuePrefix: []string{
+                "#",
+                "gh-",
+            },
+            RefActions:   []string{},
+            MergePattern: "^Merge pull request #(\\d+) from (.*)$",
+            MergePatternMaps: []string{
+                "Ref",
+                "Source",
+            },
+            RevertPattern: "^Revert \"([\\s\\S]*)\"$",
+            RevertPatternMaps: []string{
+                "Header",
+            },
+            NoteKeywords: []string{
+                "BREAKING CHANGE",
+            },
+        },
+    })
 
-	buf := &bytes.Buffer{}
-	err := gen.Generate(buf, "foo")
-	assert.Error(err)
-	assert.Contains(err.Error(), "\"foo\" was not found")
-	assert.Equal("", buf.String())
+    buf := &bytes.Buffer{}
+    err := gen.Generate(buf, "foo")
+    assert.Error(err)
+    assert.Contains(err.Error(), "\"foo\" was not found")
+    assert.Equal("", buf.String())
 }
 
 // func TestGeneratorWithTypeScopeSubject(t *testing.T) {
@@ -297,55 +297,55 @@ func TestGeneratorNotFoundCommitsOne(t *testing.T) {
 // }
 
 func TestGeneratorWithNextTag(t *testing.T) {
-	assert := assert.New(t)
-	testName := "type_scope_subject"
+    assert := assert.New(t)
+    testName := "type_scope_subject"
 
-	setup(testName, func(commit commitFunc, tag tagFunc, _ gitcmd.Client) {
-		commit("2018-01-01 00:00:00", "feat(core): version 1.0.0", "")
-		tag("1.0.0")
+    setup(testName, func(commit commitFunc, tag tagFunc, _ gitcmd.Client) {
+        commit("2018-01-01 00:00:00", "feat(core): version 1.0.0", "")
+        tag("1.0.0")
 
-		commit("2018-02-01 00:00:00", "feat(core): version 2.0.0", "")
-		tag("2.0.0")
+        commit("2018-02-01 00:00:00", "feat(core): version 2.0.0", "")
+        tag("2.0.0")
 
-		commit("2018-03-01 00:00:00", "feat(core): version 3.0.0", "")
-	})
+        commit("2018-03-01 00:00:00", "feat(core): version 3.0.0", "")
+    })
 
-	gen := NewGenerator(&Config{
-		Bin:        "git",
-		WorkingDir: filepath.Join(testRepoRoot, testName),
-		Template:   filepath.Join(cwd, "testdata", testName+".md"),
-		Info: &Info{
-			Title:         "CHANGELOG Example",
-			RepositoryURL: "https://github.com/rivy-go/git-changelog",
-		},
-		Options: &Options{
-			NextTag: "3.0.0",
-			CommitFilters: map[string][]string{
-				"Type": []string{
-					"feat",
-				},
-			},
-			CommitSortBy:      "Scope",
-			CommitGroupBy:     "Type",
-			CommitGroupSortBy: "Title",
-			CommitGroupTitleMaps: map[string]string{
-				"feat": "Features",
-			},
-			HeaderPattern: "^(\\w*)(?:\\(([\\w\\$\\.\\-\\*\\s]*)\\))?\\:\\s(.*)$",
-			HeaderPatternMaps: []string{
-				"Type",
-				"Scope",
-				"Subject",
-			},
-		},
-	})
+    gen := NewGenerator(&Config{
+        Bin:        "git",
+        WorkingDir: filepath.Join(testRepoRoot, testName),
+        Template:   filepath.Join(cwd, "testdata", testName+".md"),
+        Info: &Info{
+            Title:         "CHANGELOG Example",
+            RepositoryURL: "https://github.com/rivy-go/git-changelog",
+        },
+        Options: &Options{
+            NextTag: "3.0.0",
+            CommitFilters: map[string][]string{
+                "Type": []string{
+                    "feat",
+                },
+            },
+            CommitSortBy:      "Scope",
+            CommitGroupBy:     "Type",
+            CommitGroupSortBy: "Title",
+            CommitGroupTitleMaps: map[string]string{
+                "feat": "Features",
+            },
+            HeaderPattern: "^(\\w*)(?:\\(([\\w\\$\\.\\-\\*\\s]*)\\))?\\:\\s(.*)$",
+            HeaderPatternMaps: []string{
+                "Type",
+                "Scope",
+                "Subject",
+            },
+        },
+    })
 
-	buf := &bytes.Buffer{}
-	err := gen.Generate(buf, "")
-	output := strings.Replace(strings.TrimSpace(buf.String()), "\r\n", "\n", -1)
+    buf := &bytes.Buffer{}
+    err := gen.Generate(buf, "")
+    output := strings.Replace(strings.TrimSpace(buf.String()), "\r\n", "\n", -1)
 
-	assert.Nil(err)
-	assert.Equal(`<a name="unreleased"></a>
+    assert.Nil(err)
+    assert.Equal(`<a name="unreleased"></a>
 ## [Unreleased]
 
 
@@ -371,12 +371,12 @@ func TestGeneratorWithNextTag(t *testing.T) {
 [3.0.0]: https://github.com/rivy-go/git-changelog/compare/2.0.0...3.0.0
 [2.0.0]: https://github.com/rivy-go/git-changelog/compare/1.0.0...2.0.0`, output)
 
-	buf = &bytes.Buffer{}
-	err = gen.Generate(buf, "3.0.0")
-	output = strings.Replace(strings.TrimSpace(buf.String()), "\r\n", "\n", -1)
+    buf = &bytes.Buffer{}
+    err = gen.Generate(buf, "3.0.0")
+    output = strings.Replace(strings.TrimSpace(buf.String()), "\r\n", "\n", -1)
 
-	assert.Nil(err)
-	assert.Equal(`<a name="unreleased"></a>
+    assert.Nil(err)
+    assert.Equal(`<a name="unreleased"></a>
 ## [Unreleased]
 
 
@@ -391,52 +391,52 @@ func TestGeneratorWithNextTag(t *testing.T) {
 }
 
 func TestGeneratorWithTagFiler(t *testing.T) {
-	assert := assert.New(t)
-	testName := "type_scope_subject"
+    assert := assert.New(t)
+    testName := "type_scope_subject"
 
-	setup(testName, func(commit commitFunc, tag tagFunc, _ gitcmd.Client) {
-		commit("2018-01-01 00:00:00", "feat(core): version dev-1.0.0", "")
-		tag("dev-1.0.0")
+    setup(testName, func(commit commitFunc, tag tagFunc, _ gitcmd.Client) {
+        commit("2018-01-01 00:00:00", "feat(core): version dev-1.0.0", "")
+        tag("dev-1.0.0")
 
-		commit("2018-02-01 00:00:00", "feat(core): version v1.0.0", "")
-		tag("v1.0.0")
-	})
+        commit("2018-02-01 00:00:00", "feat(core): version v1.0.0", "")
+        tag("v1.0.0")
+    })
 
-	gen := NewGenerator(&Config{
-		Bin:        "git",
-		WorkingDir: filepath.Join(testRepoRoot, testName),
-		Template:   filepath.Join(cwd, "testdata", testName+".md"),
-		Info: &Info{
-			Title:         "CHANGELOG Example",
-			RepositoryURL: "https://github.com/rivy-go/git-changelog",
-		},
-		Options: &Options{
-			TagFilterPattern: "^v",
-			CommitFilters: map[string][]string{
-				"Type": []string{
-					"feat",
-				},
-			},
-			CommitSortBy:      "Scope",
-			CommitGroupBy:     "Type",
-			CommitGroupSortBy: "Title",
-			CommitGroupTitleMaps: map[string]string{
-				"feat": "Features",
-			},
-			HeaderPattern: "^(\\w*)(?:\\(([\\w\\$\\.\\-\\*\\s]*)\\))?\\:\\s(.*)$",
-			HeaderPatternMaps: []string{
-				"Type",
-				"Scope",
-				"Subject",
-			},
-		},
-	})
+    gen := NewGenerator(&Config{
+        Bin:        "git",
+        WorkingDir: filepath.Join(testRepoRoot, testName),
+        Template:   filepath.Join(cwd, "testdata", testName+".md"),
+        Info: &Info{
+            Title:         "CHANGELOG Example",
+            RepositoryURL: "https://github.com/rivy-go/git-changelog",
+        },
+        Options: &Options{
+            TagFilterPattern: "^v",
+            CommitFilters: map[string][]string{
+                "Type": []string{
+                    "feat",
+                },
+            },
+            CommitSortBy:      "Scope",
+            CommitGroupBy:     "Type",
+            CommitGroupSortBy: "Title",
+            CommitGroupTitleMaps: map[string]string{
+                "feat": "Features",
+            },
+            HeaderPattern: "^(\\w*)(?:\\(([\\w\\$\\.\\-\\*\\s]*)\\))?\\:\\s(.*)$",
+            HeaderPatternMaps: []string{
+                "Type",
+                "Scope",
+                "Subject",
+            },
+        },
+    })
 
-	buf := &bytes.Buffer{}
-	err := gen.Generate(buf, "")
+    buf := &bytes.Buffer{}
+    err := gen.Generate(buf, "")
 
-	assert.Nil(err)
-	assert.Equal(`<a name="unreleased"></a>
+    assert.Nil(err)
+    assert.Equal(`<a name="unreleased"></a>
 ## [Unreleased]
 
 

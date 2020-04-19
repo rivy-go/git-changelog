@@ -1,130 +1,130 @@
 package main
 
 import (
-	"bytes"
-	"errors"
-	"io"
-	"path/filepath"
-	"regexp"
-	"testing"
+    "bytes"
+    "errors"
+    "io"
+    "path/filepath"
+    "regexp"
+    "testing"
 
-	"github.com/stretchr/testify/assert"
+    "github.com/stretchr/testify/assert"
 
-	changelog "github.com/rivy-go/git-changelog/internal/changelog"
+    changelog "github.com/rivy-go/git-changelog/internal/changelog"
 )
 
 func TestCLIForStdout(t *testing.T) {
-	assert := assert.New(t)
-	assert.True(true)
+    assert := assert.New(t)
+    assert.True(true)
 
-	stdout := &bytes.Buffer{}
-	stderr := &bytes.Buffer{}
-	mockFS := &mockFileSystem{}
+    stdout := &bytes.Buffer{}
+    stderr := &bytes.Buffer{}
+    mockFS := &mockFileSystem{}
 
-	configLoader := &mockConfigLoaderImpl{
-		ReturnLoad: func(path string) (*Config, error) {
-			if path != "/.changelog/config.yml" {
-				return nil, errors.New("")
-			}
-			return &Config{
-				Bin: "/custom/bin/git",
-			}, nil
-		},
-	}
+    configLoader := &mockConfigLoaderImpl{
+        ReturnLoad: func(path string) (*Config, error) {
+            if path != "/.changelog/config.yml" {
+                return nil, errors.New("")
+            }
+            return &Config{
+                Bin: "/custom/bin/git",
+            }, nil
+        },
+    }
 
-	generator := &mockGeneratorImpl{
-		ReturnGenerate: func(w io.Writer, query string, config *changelog.Config) error {
-			if config.Bin != "/custom/bin/git" {
-				return errors.New("")
-			}
-			w.Write([]byte("success!!"))
-			return nil
-		},
-	}
+    generator := &mockGeneratorImpl{
+        ReturnGenerate: func(w io.Writer, query string, config *changelog.Config) error {
+            if config.Bin != "/custom/bin/git" {
+                return errors.New("")
+            }
+            w.Write([]byte("success!!"))
+            return nil
+        },
+    }
 
-	c := NewCLI(
-		&CLIContext{
-			WorkingDir: "/",
-			ConfigPath: "/.changelog/config.yml",
-			OutputPath: "",
-			Stdout:     stdout,
-			Stderr:     stderr,
-		},
-		mockFS,
-		configLoader,
-		generator,
-	)
+    c := NewCLI(
+        &CLIContext{
+            WorkingDir: "/",
+            ConfigPath: "/.changelog/config.yml",
+            OutputPath: "",
+            Stdout:     stdout,
+            Stderr:     stderr,
+        },
+        mockFS,
+        configLoader,
+        generator,
+    )
 
-	assert.Equal(ExitCodeOK, c.Run())
-	assert.Equal("", stderr.String())
-	assert.Equal("success!!", stdout.String())
+    assert.Equal(ExitCodeOK, c.Run())
+    assert.Equal("", stderr.String())
+    assert.Equal("success!!", stdout.String())
 }
 
 func TestCLIForFile(t *testing.T) {
-	assert := assert.New(t)
-	assert.True(true)
+    assert := assert.New(t)
+    assert.True(true)
 
-	stdout := &bytes.Buffer{}
-	stderr := &bytes.Buffer{}
+    stdout := &bytes.Buffer{}
+    stderr := &bytes.Buffer{}
 
-	mockFS := &mockFileSystem{
-		ReturnMkdirP: func(path string) error {
-			if filepath.ToSlash(path) != "/dir/to" {
-				return errors.New("")
-			}
-			return nil
-		},
-		ReturnCreate: func(name string) (File, error) {
-			if filepath.ToSlash(name) != "/dir/to/CHANGELOG.tpl" {
-				return nil, errors.New("")
-			}
-			return &mockFile{
-				ReturnWrite: func(b []byte) (int, error) {
-					if string(b) != "success!!" {
-						return 0, errors.New("")
-					}
-					return 0, nil
-				},
-			}, nil
-		},
-	}
+    mockFS := &mockFileSystem{
+        ReturnMkdirP: func(path string) error {
+            if filepath.ToSlash(path) != "/dir/to" {
+                return errors.New("")
+            }
+            return nil
+        },
+        ReturnCreate: func(name string) (File, error) {
+            if filepath.ToSlash(name) != "/dir/to/CHANGELOG.tpl" {
+                return nil, errors.New("")
+            }
+            return &mockFile{
+                ReturnWrite: func(b []byte) (int, error) {
+                    if string(b) != "success!!" {
+                        return 0, errors.New("")
+                    }
+                    return 0, nil
+                },
+            }, nil
+        },
+    }
 
-	configLoader := &mockConfigLoaderImpl{
-		ReturnLoad: func(path string) (*Config, error) {
-			if filepath.ToSlash(path) != "/.changelog/config.yml" {
-				return nil, errors.New("")
-			}
-			return &Config{
-				Bin: "/custom/bin/git",
-			}, nil
-		},
-	}
+    configLoader := &mockConfigLoaderImpl{
+        ReturnLoad: func(path string) (*Config, error) {
+            if filepath.ToSlash(path) != "/.changelog/config.yml" {
+                return nil, errors.New("")
+            }
+            return &Config{
+                Bin: "/custom/bin/git",
+            }, nil
+        },
+    }
 
-	generator := &mockGeneratorImpl{
-		ReturnGenerate: func(w io.Writer, query string, config *changelog.Config) error {
-			if filepath.ToSlash(config.Bin) != "/custom/bin/git" {
-				return errors.New("")
-			}
-			w.Write([]byte("success!!"))
-			return nil
-		},
-	}
+    generator := &mockGeneratorImpl{
+        ReturnGenerate: func(w io.Writer, query string, config *changelog.Config) error {
+            if filepath.ToSlash(config.Bin) != "/custom/bin/git" {
+                return errors.New("")
+            }
+            w.Write([]byte("success!!"))
+            return nil
+        },
+    }
 
-	c := NewCLI(
-		&CLIContext{
-			WorkingDir: "/",
-			ConfigPath: "/.changelog/config.yml",
-			OutputPath: "/dir/to/CHANGELOG.tpl",
-			Stdout:     stdout,
-			Stderr:     stderr,
-		},
-		mockFS,
-		configLoader,
-		generator,
-	)
+    c := NewCLI(
+        &CLIContext{
+            WorkingDir: "/",
+            ConfigPath: "/.changelog/config.yml",
+            OutputPath: "/dir/to/CHANGELOG.tpl",
+            Stdout:     stdout,
+            Stderr:     stderr,
+        },
+        mockFS,
+        configLoader,
+        generator,
+    )
 
-	assert.Equal(ExitCodeOK, c.Run())
-	assert.Equal("", stderr.String())
-	out := regexp.MustCompile("\x1b\\[[^a-z]*[a-z]").ReplaceAllString(stdout.String(), "")
-	assert.Contains(out, "Generate of \"/dir/to/CHANGELOG.tpl\"")
+    assert.Equal(ExitCodeOK, c.Run())
+    assert.Equal("", stderr.String())
+    out := regexp.MustCompile("\x1b\\[[^a-z]*[a-z]").ReplaceAllString(stdout.String(), "")
+    assert.Contains(out, "Generate of \"/dir/to/CHANGELOG.tpl\"")
 }

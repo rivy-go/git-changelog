@@ -1,44 +1,44 @@
 package main
 
 import (
-	"fmt"
-	"strings"
+    "fmt"
+    "strings"
 )
 
 // ConfigBuilder ...
 type ConfigBuilder interface {
-	Builder
+    Builder
 }
 
 type configBuilderImpl struct{}
 
 // NewConfigBuilder ...
 func NewConfigBuilder() ConfigBuilder {
-	return &configBuilderImpl{}
+    return &configBuilderImpl{}
 }
 
 // Build ...
 func (*configBuilderImpl) Build(ans *Answer) (string, error) {
-	var msgFormat *CommitMessageFormat
+    var msgFormat *CommitMessageFormat
 
-	for _, ff := range formats {
-		f, _ := ff.(*CommitMessageFormat)
-		if f.display == ans.CommitMessageFormat {
-			msgFormat = f
-			break
-		}
-	}
+    for _, ff := range formats {
+        f, _ := ff.(*CommitMessageFormat)
+        if f.display == ans.CommitMessageFormat {
+            msgFormat = f
+            break
+        }
+    }
 
-	if msgFormat == nil {
-		return "", fmt.Errorf("\"%s\" is an invalid commit message format", ans.CommitMessageFormat)
-	}
+    if msgFormat == nil {
+        return "", fmt.Errorf("\"%s\" is an invalid commit message format", ans.CommitMessageFormat)
+    }
 
-	repoURL := strings.TrimRight(ans.RepositoryURL, "/")
-	if repoURL == "" {
-		repoURL = "\"\""
-	}
+    repoURL := strings.TrimRight(ans.RepositoryURL, "/")
+    if repoURL == "" {
+        repoURL = "\"\""
+    }
 
-	config := fmt.Sprintf(`style: %s
+    config := fmt.Sprintf(`style: %s
 template: %s
 info:
   title: CHANGELOG
@@ -55,14 +55,14 @@ options:
   notes:
     keywords:
       - BREAKING CHANGE`,
-		ans.Style,
-		defaultTemplateFilename,
-		repoURL,
-		msgFormat.FilterTypesString(),
-		msgFormat.TitleMapsString(),
-		msgFormat.pattern,
-		msgFormat.PatternMapString(),
-	)
+        ans.Style,
+        defaultTemplateFilename,
+        repoURL,
+        msgFormat.FilterTypesString(),
+        msgFormat.TitleMapsString(),
+        msgFormat.pattern,
+        msgFormat.PatternMapString(),
+    )
 
-	return config, nil
+    return config, nil
 }

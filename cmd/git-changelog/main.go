@@ -1,20 +1,20 @@
 package main
 
 import (
-	"fmt"
-	"io"
-	"os"
+    "fmt"
+    "io"
+    "os"
 
-	"github.com/fatih/color"
-	"github.com/mattn/go-colorable"
-	gitcmd "github.com/tsuyoshiwada/go-gitcmd"
-	"github.com/urfave/cli"
+    "github.com/fatih/color"
+    "github.com/mattn/go-colorable"
+    gitcmd "github.com/tsuyoshiwada/go-gitcmd"
+    "github.com/urfave/cli"
 )
 
 func CreateApp(actionFunc cli.ActionFunc) *cli.App {
-	ttl := color.New(color.FgYellow).SprintFunc()
+    ttl := color.New(color.FgYellow).SprintFunc()
 
-	cli.AppHelpTemplate = fmt.Sprintf(`
+    cli.AppHelpTemplate = fmt.Sprintf(`
 %s
   {{.Name}} [options] <tag query>
 
@@ -55,149 +55,149 @@ func CreateApp(actionFunc cli.ActionFunc) *cli.App {
 
     The above is a command that uses a configuration file placed other than ".changelog/config.yml".
 `,
-		ttl("USAGE:"),
-		ttl("OPTIONS:"),
-		ttl("EXAMPLE:"),
-	)
+        ttl("USAGE:"),
+        ttl("OPTIONS:"),
+        ttl("EXAMPLE:"),
+    )
 
-	cli.HelpPrinter = func(w io.Writer, templ string, data interface{}) {
-		cli.HelpPrinterCustom(colorable.NewColorableStdout(), templ, data, nil)
-	}
+    cli.HelpPrinter = func(w io.Writer, templ string, data interface{}) {
+        cli.HelpPrinterCustom(colorable.NewColorableStdout(), templ, data, nil)
+    }
 
-	app := cli.NewApp()
-	app.Name = "git-changelog"
-	app.Usage = "todo usage for git-changelog"
-	app.Version = Version
+    app := cli.NewApp()
+    app.Name = "git-changelog"
+    app.Usage = "todo usage for git-changelog"
+    app.Version = Version
 
-	app.Flags = []cli.Flag{
-		// init
-		cli.BoolFlag{
-			Name:  "init",
-			Usage: "generate the git-changelog configuration file in interactive",
-		},
+    app.Flags = []cli.Flag{
+        // init
+        cli.BoolFlag{
+            Name:  "init",
+            Usage: "generate the git-changelog configuration file in interactive",
+        },
 
-		// config
-		cli.StringFlag{
-			Name:  "config, c",
-			Usage: "specifies a different configuration file to pick up",
-			Value: ".changelog/config.yml",
-		},
+        // config
+        cli.StringFlag{
+            Name:  "config, c",
+            Usage: "specifies a different configuration file to pick up",
+            Value: ".changelog/config.yml",
+        },
 
-		// output
-		cli.StringFlag{
-			Name:  "output, o",
-			Usage: "output path and filename for the changelogs. If not specified, output to stdout",
-		},
+        // output
+        cli.StringFlag{
+            Name:  "output, o",
+            Usage: "output path and filename for the changelogs. If not specified, output to stdout",
+        },
 
-		cli.StringFlag{
-			Name:  "next-tag",
-			Usage: "treat unreleased commits as specified tags (EXPERIMENTAL)",
-		},
+        cli.StringFlag{
+            Name:  "next-tag",
+            Usage: "treat unreleased commits as specified tags (EXPERIMENTAL)",
+        },
 
-		cli.BoolFlag{
-			Name:  "unreleased, u",
-			Usage: "include unreleased commits",
-		},
+        cli.BoolFlag{
+            Name:  "unreleased, u",
+            Usage: "include unreleased commits",
+        },
 
-		// silent
-		cli.BoolFlag{
-			Name:  "silent",
-			Usage: "disable stdout output",
-		},
+        // silent
+        cli.BoolFlag{
+            Name:  "silent",
+            Usage: "disable stdout output",
+        },
 
-		// no-color
-		cli.BoolFlag{
-			Name:   "no-color",
-			Usage:  "disable color output",
-			EnvVar: "NO_COLOR",
-		},
+        // no-color
+        cli.BoolFlag{
+            Name:   "no-color",
+            Usage:  "disable color output",
+            EnvVar: "NO_COLOR",
+        },
 
-		// no-emoji
-		cli.BoolFlag{
-			Name:   "no-emoji",
-			Usage:  "disable emoji output",
-			EnvVar: "NO_EMOJI",
-		},
+        // no-emoji
+        cli.BoolFlag{
+            Name:   "no-emoji",
+            Usage:  "disable emoji output",
+            EnvVar: "NO_EMOJI",
+        },
 
-		// no-case
-		cli.BoolFlag{
-			Name:  "no-case",
-			Usage: "disable case sensitive filters",
-		},
+        // no-case
+        cli.BoolFlag{
+            Name:  "no-case",
+            Usage: "disable case sensitive filters",
+        },
 
-		// tag-filter-pattern
-		cli.StringFlag{
-			Name:  "tag-filter-pattern, p",
-			Usage: "Regular expression of tag filter. Is specified, only matched tags will be picked",
-		},
+        // tag-filter-pattern
+        cli.StringFlag{
+            Name:  "tag-filter-pattern, p",
+            Usage: "Regular expression of tag filter. Is specified, only matched tags will be picked",
+        },
 
-		// help & version
-		cli.HelpFlag,
-		cli.VersionFlag,
-	}
+        // help & version
+        cli.HelpFlag,
+        cli.VersionFlag,
+    }
 
-	app.Action = actionFunc
+    app.Action = actionFunc
 
-	return app
+    return app
 }
 
 func AppAction(c *cli.Context) error {
-	wd, err := os.Getwd()
-	if err != nil {
-		fmt.Fprintln(os.Stderr, "failed to get working directory", err)
-		os.Exit(ExitCodeError)
-	}
+    wd, err := os.Getwd()
+    if err != nil {
+        fmt.Fprintln(os.Stderr, "failed to get working directory", err)
+        os.Exit(ExitCodeError)
+    }
 
-	// initializer
-	if c.Bool("init") {
-		initializer := NewInitializer(
-			&InitContext{
-				WorkingDir: wd,
-				Stdout:     colorable.NewColorableStdout(),
-				Stderr:     colorable.NewColorableStderr(),
-			},
-			fs,
-			NewQuestioner(
-				gitcmd.New(&gitcmd.Config{
-					Bin: "git",
-				}),
-				fs,
-			),
-			NewConfigBuilder(),
-			templateBuilderFactory,
-		)
+    // initializer
+    if c.Bool("init") {
+        initializer := NewInitializer(
+            &InitContext{
+                WorkingDir: wd,
+                Stdout:     colorable.NewColorableStdout(),
+                Stderr:     colorable.NewColorableStderr(),
+            },
+            fs,
+            NewQuestioner(
+                gitcmd.New(&gitcmd.Config{
+                    Bin: "git",
+                }),
+                fs,
+            ),
+            NewConfigBuilder(),
+            templateBuilderFactory,
+        )
 
-		os.Exit(initializer.Run())
-	}
+        os.Exit(initializer.Run())
+    }
 
-	// changelog
-	changelogCLI := NewCLI(
-		&CLIContext{
-			WorkingDir:       wd,
-			Stdout:           colorable.NewColorableStdout(),
-			Stderr:           colorable.NewColorableStderr(),
-			ConfigPath:       c.String("config"),
-			OutputPath:       c.String("output"),
-			Silent:           c.Bool("silent"),
-			NoColor:          c.Bool("no-color"),
-			NoEmoji:          c.Bool("no-emoji"),
-			NoCaseSensitive:  c.Bool("no-case"),
-			Query:            c.Args().First(),
-			NextTag:          c.String("next-tag"),
-			TagFilterPattern: c.String("tag-filter-pattern"),
-			Unreleased:       c.Bool("unreleased"),
-		},
-		fs,
-		NewConfigLoader(),
-		NewGenerator(),
-	)
+    // changelog
+    changelogCLI := NewCLI(
+        &CLIContext{
+            WorkingDir:       wd,
+            Stdout:           colorable.NewColorableStdout(),
+            Stderr:           colorable.NewColorableStderr(),
+            ConfigPath:       c.String("config"),
+            OutputPath:       c.String("output"),
+            Silent:           c.Bool("silent"),
+            NoColor:          c.Bool("no-color"),
+            NoEmoji:          c.Bool("no-emoji"),
+            NoCaseSensitive:  c.Bool("no-case"),
+            Query:            c.Args().First(),
+            NextTag:          c.String("next-tag"),
+            TagFilterPattern: c.String("tag-filter-pattern"),
+            Unreleased:       c.Bool("unreleased"),
+        },
+        fs,
+        NewConfigLoader(),
+        NewGenerator(),
+    )
 
-	os.Exit(changelogCLI.Run())
+    os.Exit(changelogCLI.Run())
 
-	return nil
+    return nil
 }
 
 func main() {
-	app := CreateApp(AppAction)
-	app.Run(os.Args)
+    app := CreateApp(AppAction)
+    app.Run(os.Args)
 }
