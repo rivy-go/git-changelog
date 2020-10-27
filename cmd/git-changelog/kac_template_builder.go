@@ -6,58 +6,58 @@ type kacTemplateBuilderImpl struct{}
 
 // NewKACTemplateBuilder ...
 func NewKACTemplateBuilder() TemplateBuilder {
-    return &kacTemplateBuilderImpl{}
+	return &kacTemplateBuilderImpl{}
 }
 
 // Build ...
 func (t *kacTemplateBuilderImpl) Build(ans *Answer) (string, error) {
-    // unreleased
-    tpl := t.unreleased(ans.Style, ans.CommitMessageFormat)
+	// unreleased
+	tpl := t.unreleased(ans.Style, ans.CommitMessageFormat)
 
-    // version start
-    tpl += "\n{{ range .Versions }}\n"
+	// version start
+	tpl += "\n{{ range .Versions }}\n"
 
-    tpl += t.versionHeader(ans.Style)
+	tpl += t.versionHeader(ans.Style)
 
-    // commits
-    tpl += t.commits(".CommitGroups", ans.CommitMessageFormat)
+	// commits
+	tpl += t.commits(".CommitGroups", ans.CommitMessageFormat)
 
-    // revert
-    if ans.IncludeReverts {
-        tpl += t.reverts()
-    }
+	// revert
+	if ans.IncludeReverts {
+		tpl += t.reverts()
+	}
 
-    // merges
-    if ans.IncludeMerges {
-        tpl += t.merges(ans.Style)
-    }
+	// merges
+	if ans.IncludeMerges {
+		tpl += t.merges(ans.Style)
+	}
 
-    // notes
-    tpl += t.notes()
+	// notes
+	tpl += t.notes()
 
-    // versions end
-    tpl += "\n{{ end -}}"
+	// versions end
+	tpl += "\n{{ end -}}"
 
-    // footer (links)
-    tpl += t.footer(ans.Style)
+	// footer (links)
+	tpl += t.footer(ans.Style)
 
-    return tpl, nil
+	return tpl, nil
 }
 
 func (t *kacTemplateBuilderImpl) unreleased(style, format string) string {
-    var (
-        id      = ""
-        title   = "Unreleased"
-        commits = t.commits(".Unreleased.CommitGroups", format)
-    )
+	var (
+		id      = ""
+		title   = "Unreleased"
+		commits = t.commits(".Unreleased.CommitGroups", format)
+	)
 
-    switch style {
-    case styleGitHub, styleGitLab, styleBitbucket:
-        id = "<a name=\"unreleased\"></a>\n"
-        title = fmt.Sprintf("[%s]", title)
-    }
+	switch style {
+	case styleGitHub, styleGitLab, styleBitbucket:
+		id = "<a name=\"unreleased\"></a>\n"
+		title = fmt.Sprintf("[%s]", title)
+	}
 
-    return fmt.Sprintf(`{{ if .Versions -}}
+	return fmt.Sprintf(`{{ if .Versions -}}
 %s## %s
 
 {{ if .Unreleased.CommitGroups -}}
@@ -67,47 +67,47 @@ func (t *kacTemplateBuilderImpl) unreleased(style, format string) string {
 }
 
 func (t *kacTemplateBuilderImpl) versionHeader(style string) string {
-    var (
-        id      = ""
-        tagName = "{{ .Tag.Name }}"
-        date    = "{{ datetime \"2006-01-02\" .Tag.Date }}"
-    )
+	var (
+		id      = ""
+		tagName = "{{ .Tag.Name }}"
+		date    = "{{ datetime \"2006-01-02\" .Tag.Date }}"
+	)
 
-    switch style {
-    case styleGitHub, styleGitLab, styleBitbucket:
-        id = templateTagNameAnchor
-        tagName = "{{ if .Tag.Previous }}[{{ .Tag.Name }}]{{ else }}{{ .Tag.Name }}{{ end }}"
-    }
+	switch style {
+	case styleGitHub, styleGitLab, styleBitbucket:
+		id = templateTagNameAnchor
+		tagName = "{{ if .Tag.Previous }}[{{ .Tag.Name }}]{{ else }}{{ .Tag.Name }}{{ end }}"
+	}
 
-    return fmt.Sprintf("%s## %s - %s\n", id, tagName, date)
+	return fmt.Sprintf("%s## %s - %s\n", id, tagName, date)
 }
 
 func (t *kacTemplateBuilderImpl) commits(commitGroups, format string) string {
-    var (
-        body string
-    )
+	var (
+		body string
+	)
 
-    switch format {
-    case fmtSubject.display:
-        body = `{{ range .Commits -}}
+	switch format {
+	case fmtSubject.display:
+		body = `{{ range .Commits -}}
 - {{ .Header }}
 {{ end }}`
 
-    default:
-        body = `### {{ .Title }}
+	default:
+		body = `### {{ .Title }}
 {{ range .Commits -}}
 - {{ if .Scope }}**{{ .Scope }}:** {{ end }}{{ .Subject }}
 {{ end }}`
-    }
+	}
 
-    return fmt.Sprintf(`{{ range %s -}}
+	return fmt.Sprintf(`{{ range %s -}}
 %s
 {{ end -}}
 `, commitGroups, body)
 }
 
 func (t *kacTemplateBuilderImpl) reverts() string {
-    return `
+	return `
 {{- if .RevertCommits -}}
 ### Reverts
 {{ range .RevertCommits -}}
@@ -118,18 +118,18 @@ func (t *kacTemplateBuilderImpl) reverts() string {
 }
 
 func (t *kacTemplateBuilderImpl) merges(style string) string {
-    var title string
+	var title string
 
-    switch style {
-    case styleGitHub, styleBitbucket:
-        title = "Pull Requests"
-    case styleGitLab:
-        title = "Merge Requests"
-    default:
-        title = "Merges"
-    }
+	switch style {
+	case styleGitHub, styleBitbucket:
+		title = "Pull Requests"
+	case styleGitLab:
+		title = "Merge Requests"
+	default:
+		title = "Merges"
+	}
 
-    return fmt.Sprintf(`
+	return fmt.Sprintf(`
 {{- if .MergeCommits -}}
 ### %s
 {{ range .MergeCommits -}}
@@ -140,7 +140,7 @@ func (t *kacTemplateBuilderImpl) merges(style string) string {
 }
 
 func (*kacTemplateBuilderImpl) notes() string {
-    return `
+	return `
 {{- if .NoteGroups -}}
 {{ range .NoteGroups -}}
 ### {{ .Title }}
@@ -152,9 +152,9 @@ func (*kacTemplateBuilderImpl) notes() string {
 }
 
 func (*kacTemplateBuilderImpl) footer(style string) string {
-    switch style {
-    case styleGitHub, styleGitLab:
-        return `
+	switch style {
+	case styleGitHub, styleGitLab:
+		return `
 
 {{- if .Versions }}
 [Unreleased]: {{ .Info.RepositoryURL }}/compare/{{ $latest := index .Versions 0 }}{{ $latest.Tag.Name }}...HEAD
@@ -164,8 +164,8 @@ func (*kacTemplateBuilderImpl) footer(style string) string {
 {{ end -}}
 {{ end -}}
 {{ end -}}`
-    case styleBitbucket:
-        return `
+	case styleBitbucket:
+		return `
 
 {{- if .Versions }}
 [Unreleased]: {{ .Info.RepositoryURL }}/compare/HEAD..{{ $latest := index .Versions 0 }}{{ $latest.Tag.Name }}
@@ -175,7 +175,7 @@ func (*kacTemplateBuilderImpl) footer(style string) string {
 {{ end -}}
 {{ end -}}
 {{ end -}}`
-    default:
-        return ""
-    }
+	default:
+		return ""
+	}
 }

@@ -1,25 +1,25 @@
 package main
 
 import (
-    "testing"
+	"testing"
 
-    "github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestCustomTemplateBuilderDefault(t *testing.T) {
-    assert := assert.New(t)
-    builder := NewCustomTemplateBuilder()
+	assert := assert.New(t)
+	builder := NewCustomTemplateBuilder()
 
-    out, err := builder.Build(&Answer{
-        Style:               styleGitHub,
-        CommitMessageFormat: fmtTypeScopeSubject.display,
-        Template:            tplStandard.display,
-        IncludeMerges:       true,
-        IncludeReverts:      true,
-    })
+	out, err := builder.Build(&Answer{
+		Style:               styleGitHub,
+		CommitMessageFormat: fmtTypeScopeSubject.display,
+		Template:            tplStandard.display,
+		IncludeMerges:       true,
+		IncludeReverts:      true,
+	})
 
-    assert.Nil(err)
-    assert.Equal(`{{ range .Versions }}
+	assert.Nil(err)
+	assert.Equal(`{{ range .Versions }}
 <a name="{{ .Tag.Name }}"></a>
 ## {{ if .Tag.Previous }}[{{ .Tag.Name }}]({{ $.Info.RepositoryURL }}/compare/{{ .Tag.Previous.Name }}...{{ .Tag.Name }}){{ else }}{{ .Tag.Name }}{{ end }} ({{ datetime "2006-01-02" .Tag.Date }})
 
@@ -60,19 +60,19 @@ func TestCustomTemplateBuilderDefault(t *testing.T) {
 }
 
 func TestCustomTemplateBuilderNone(t *testing.T) {
-    assert := assert.New(t)
-    builder := NewCustomTemplateBuilder()
+	assert := assert.New(t)
+	builder := NewCustomTemplateBuilder()
 
-    out, err := builder.Build(&Answer{
-        Style:               styleNone,
-        CommitMessageFormat: fmtTypeScopeSubject.display,
-        Template:            tplStandard.display,
-        IncludeMerges:       true,
-        IncludeReverts:      true,
-    })
+	out, err := builder.Build(&Answer{
+		Style:               styleNone,
+		CommitMessageFormat: fmtTypeScopeSubject.display,
+		Template:            tplStandard.display,
+		IncludeMerges:       true,
+		IncludeReverts:      true,
+	})
 
-    assert.Nil(err)
-    assert.Equal(`{{ range .Versions }}
+	assert.Nil(err)
+	assert.Equal(`{{ range .Versions }}
 ## {{ .Tag.Name }} ({{ datetime "2006-01-02" .Tag.Date }})
 
 {{ range .CommitGroups -}}
@@ -112,19 +112,19 @@ func TestCustomTemplateBuilderNone(t *testing.T) {
 }
 
 func TestCustomTemplateBuilderSubjectOnly(t *testing.T) {
-    assert := assert.New(t)
-    builder := NewCustomTemplateBuilder()
+	assert := assert.New(t)
+	builder := NewCustomTemplateBuilder()
 
-    out, err := builder.Build(&Answer{
-        Style:               styleNone,
-        CommitMessageFormat: fmtSubject.display,
-        Template:            tplStandard.display,
-        IncludeMerges:       true,
-        IncludeReverts:      true,
-    })
+	out, err := builder.Build(&Answer{
+		Style:               styleNone,
+		CommitMessageFormat: fmtSubject.display,
+		Template:            tplStandard.display,
+		IncludeMerges:       true,
+		IncludeReverts:      true,
+	})
 
-    assert.Nil(err)
-    assert.Equal(`{{ range .Versions }}
+	assert.Nil(err)
+	assert.Equal(`{{ range .Versions }}
 ## {{ .Tag.Name }} ({{ datetime "2006-01-02" .Tag.Date }})
 
 {{ range .CommitGroups -}}
@@ -162,19 +162,19 @@ func TestCustomTemplateBuilderSubjectOnly(t *testing.T) {
 }
 
 func TestCustomTemplateBuilderSubject(t *testing.T) {
-    assert := assert.New(t)
-    builder := NewCustomTemplateBuilder()
+	assert := assert.New(t)
+	builder := NewCustomTemplateBuilder()
 
-    out, err := builder.Build(&Answer{
-        Style:               styleNone,
-        CommitMessageFormat: fmtTypeSubject.display,
-        Template:            tplStandard.display,
-        IncludeMerges:       true,
-        IncludeReverts:      true,
-    })
+	out, err := builder.Build(&Answer{
+		Style:               styleNone,
+		CommitMessageFormat: fmtTypeSubject.display,
+		Template:            tplStandard.display,
+		IncludeMerges:       true,
+		IncludeReverts:      true,
+	})
 
-    assert.Nil(err)
-    assert.Equal(`{{ range .Versions }}
+	assert.Nil(err)
+	assert.Equal(`{{ range .Versions }}
 ## {{ .Tag.Name }} ({{ datetime "2006-01-02" .Tag.Date }})
 
 {{ range .CommitGroups -}}
@@ -214,19 +214,19 @@ func TestCustomTemplateBuilderSubject(t *testing.T) {
 }
 
 func TestCustomTemplateBuilderIgnoreReverts(t *testing.T) {
-    assert := assert.New(t)
-    builder := NewCustomTemplateBuilder()
+	assert := assert.New(t)
+	builder := NewCustomTemplateBuilder()
 
-    out, err := builder.Build(&Answer{
-        Style:               styleNone,
-        CommitMessageFormat: fmtTypeSubject.display,
-        Template:            tplStandard.display,
-        IncludeMerges:       true,
-        IncludeReverts:      false,
-    })
+	out, err := builder.Build(&Answer{
+		Style:               styleNone,
+		CommitMessageFormat: fmtTypeSubject.display,
+		Template:            tplStandard.display,
+		IncludeMerges:       true,
+		IncludeReverts:      false,
+	})
 
-    assert.Nil(err)
-    assert.Equal(`{{ range .Versions }}
+	assert.Nil(err)
+	assert.Equal(`{{ range .Versions }}
 ## {{ .Tag.Name }} ({{ datetime "2006-01-02" .Tag.Date }})
 
 {{ range .CommitGroups -}}
@@ -258,19 +258,19 @@ func TestCustomTemplateBuilderIgnoreReverts(t *testing.T) {
 }
 
 func TestCustomTemplateBuilderIgnoreMerges(t *testing.T) {
-    assert := assert.New(t)
-    builder := NewCustomTemplateBuilder()
+	assert := assert.New(t)
+	builder := NewCustomTemplateBuilder()
 
-    out, err := builder.Build(&Answer{
-        Style:               styleNone,
-        CommitMessageFormat: fmtTypeSubject.display,
-        Template:            tplStandard.display,
-        IncludeMerges:       false,
-        IncludeReverts:      true,
-    })
+	out, err := builder.Build(&Answer{
+		Style:               styleNone,
+		CommitMessageFormat: fmtTypeSubject.display,
+		Template:            tplStandard.display,
+		IncludeMerges:       false,
+		IncludeReverts:      true,
+	})
 
-    assert.Nil(err)
-    assert.Equal(`{{ range .Versions }}
+	assert.Nil(err)
+	assert.Equal(`{{ range .Versions }}
 ## {{ .Tag.Name }} ({{ datetime "2006-01-02" .Tag.Date }})
 
 {{ range .CommitGroups -}}
@@ -302,19 +302,19 @@ func TestCustomTemplateBuilderIgnoreMerges(t *testing.T) {
 }
 
 func TestCustomTemplateBuilderCool(t *testing.T) {
-    assert := assert.New(t)
-    builder := NewCustomTemplateBuilder()
+	assert := assert.New(t)
+	builder := NewCustomTemplateBuilder()
 
-    out, err := builder.Build(&Answer{
-        Style:               styleNone,
-        CommitMessageFormat: fmtTypeScopeSubject.display,
-        Template:            tplCool.display,
-        IncludeMerges:       true,
-        IncludeReverts:      true,
-    })
+	out, err := builder.Build(&Answer{
+		Style:               styleNone,
+		CommitMessageFormat: fmtTypeScopeSubject.display,
+		Template:            tplCool.display,
+		IncludeMerges:       true,
+		IncludeReverts:      true,
+	})
 
-    assert.Nil(err)
-    assert.Equal(`{{ range .Versions }}
+	assert.Nil(err)
+	assert.Equal(`{{ range .Versions }}
 ## {{ .Tag.Name }}
 
 > {{ datetime "2006-01-02" .Tag.Date }}
