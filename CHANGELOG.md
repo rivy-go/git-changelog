@@ -9,7 +9,7 @@
 > The changelog format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) using [conventional/semantic commits](https://nitayneeman.com/posts/understanding-semantic-commit-messages-using-git-and-angular).
 
 </div>
-<div class="prefix"></div>
+<div id='last-line-of-prefix'></div>
 
 ---
 
@@ -542,7 +542,7 @@ feat: Add --tag-filter-pattern flag.
 * chore: Add e2e tests &ac; [`8b6430e`](https://github.com/rivy-go/git-changelog/commit/8b6430ea17207f370c7cfeaef0bf9f5a187a5979)
 * chore: Setup gitignore &ac; [`8c7c870`](https://github.com/rivy-go/git-changelog/commit/8c7c8707ababe1a6d27a48900f9c0dfc779f3c23)
 * chore: Initial commit &ac; [`a44743e`](https://github.com/rivy-go/git-changelog/commit/a44743ef3fe09fd622e22372f8f3e4a3c65f0439)
-* maint *(editor)*: Add Editorconfig &ac; [`78c2f1e`](https://github.com/rivy-go/git-changelog/commit/78c2f1e90939cc8d3ba2b0d6455a2369e22089bc)
+* maint *(editor)*: add Editorconfig &ac; [`78c2f1e`](https://github.com/rivy-go/git-changelog/commit/78c2f1e90939cc8d3ba2b0d6455a2369e22089bc)
 
 #### Refactoring
 
