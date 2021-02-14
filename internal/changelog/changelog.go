@@ -20,6 +20,7 @@ type Options struct {
 	Processor            Processor
 	ShowUnreleased       bool                // Enable processing of unreleased commits
 	NextTag              string              // Treat unreleased commits as specified tags (EXPERIMENTAL)
+	NextTagNow           bool                // Assign date of 'next-tag' to current time (EXPERIMENTAL)
 	TagFilterPattern     string              // Filter tag by regexp
 	NoCaseSensitive      bool                // Filter commits in a case insensitive way
 	CommitFilters        map[string][]string // Filter by using `Commit` properties and values. Filtering is not done by specifying an empty value
@@ -203,7 +204,11 @@ func (gen *Generator) readVersions(tags []*Tag, first string) ([]*Version, error
 
 		// Instead of `getTags()`, assign the date to the tag
 		if isNext && len(commits) != 0 {
-			tag.Date = commits[0].Author.Date
+			if gen.config.Options.NextTagNow {
+				tag.Date = time.Now()
+			} else {
+				tag.Date = commits[0].Author.Date
+			}
 		}
 	}
 

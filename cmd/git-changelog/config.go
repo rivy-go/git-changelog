@@ -268,6 +268,7 @@ func (config *Config) Convert(ctx *CLIContext) *changelog.Config {
 		Options: &changelog.Options{
 			ShowUnreleased:       ctx.Unreleased,
 			NextTag:              ctx.NextTag,
+			NextTagNow:           ctx.NextTagNow,
 			TagFilterPattern:     (map[bool]string{true: ctx.TagFilterPattern, false: opts.Tag.Pattern})[ctx.TagFilterPattern != ""],
 			NoCaseSensitive:      ctx.NoCaseSensitive,
 			CommitFilters:        opts.Commits.Filters,

@@ -95,6 +95,11 @@ func createApp(actionFunc cli.ActionFunc) *cli.App {
 		},
 
 		cli.BoolFlag{
+			Name:  "next-tag-now",
+			Usage: "assign date of 'next-tag' to current time (EXPERIMENTAL)",
+		},
+
+		cli.BoolFlag{
 			Name:  "unreleased, u",
 			Usage: "include unreleased commits",
 		},
@@ -184,6 +189,7 @@ func appAction(c *cli.Context) error {
 			NoCaseSensitive:  c.Bool("no-case"),
 			Query:            c.Args().First(),
 			NextTag:          c.String("next-tag"),
+			NextTagNow:       c.Bool("next-tag-now"),
 			TagFilterPattern: c.String("tag-filter-pattern"),
 			Unreleased:       c.Bool("unreleased"),
 		},

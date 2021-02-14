@@ -17,6 +17,7 @@ type CLIContext struct {
 	NoCaseSensitive  bool
 	Query            string
 	NextTag          string
+	NextTagNow       bool
 	TagFilterPattern string
 	Unreleased       bool
 }
