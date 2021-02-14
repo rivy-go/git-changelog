@@ -13,6 +13,35 @@
 
 ---
 
+## [1.1.0](https://github.com/rivy-go/git-changelog/compare/1.0.0...1.1.0) <small>(2021-02-13)</small>
+
+<details open><summary><small><em>[1.1.0; details]</em></small></summary>
+
+#### Changes
+
+* add '--next-tag-now' CLI option &ac; [`e3a58a0`](https://github.com/rivy-go/git-changelog/commit/e3a58a0f1076a628c0311805f03b0abaedd3cf9e)
+* add 'Separator' field to Commit structure &ac; [`8d80c49`](https://github.com/rivy-go/git-changelog/commit/8d80c49186e56973c789bff812631196bc7d6b65)
+* add 'smartLowerFirstWord' template function &ac; [`09fd4e5`](https://github.com/rivy-go/git-changelog/commit/09fd4e53dbcd741977d64f2a645686c9c6418adc)
+* change ~ improve 'upperFirst' to effect first non-space character &ac; [`c47dac0`](https://github.com/rivy-go/git-changelog/commit/c47dac02b913b4ac2ce1cfe3f736a4b03ef15c4e)
+
+#### Maintenance
+
+* maint *(build)*: VSCode configuration update &ac; [`1e47489`](https://github.com/rivy-go/git-changelog/commit/1e474895cdbe52d39fe2798c459bb1bbfa2a5c78)
+* maint *(deps)*: `go mod tidy` &ac; [`530970c`](https://github.com/rivy-go/git-changelog/commit/530970c7043b7277d8ae065345aa61498952df45)
+* maint *(dev)*: (gitignore) ignore file history storage &ac; [`340ac99`](https://github.com/rivy-go/git-changelog/commit/340ac9988594dad20517b5f001d27ccc0a6fd857)
+* maint *(dev)*: update .editorconfig &ac; [`39e1f48`](https://github.com/rivy-go/git-changelog/commit/39e1f4867fef71d03d73fef3bbaf56fe174361f8)
+* maint *(dev)*: update VSCode settings &ac; [`1316480`](https://github.com/rivy-go/git-changelog/commit/1316480e1a68242c9f032f7904f7ae9a82547a02)
+* maint *(polish)*: `make format` (ie, `go fmt`) whitespace standardization &ac; [`e8e9894`](https://github.com/rivy-go/git-changelog/commit/e8e989454c58edae4ee06865fa15f04314b8178e)
+* maint *(polish)*: whitespace fixup &ac; [`dde4272`](https://github.com/rivy-go/git-changelog/commit/dde4272f1c153aea847505ddc168e1c208f37f59)
+
+#### Refactoring
+
+* refactor *(polish)*: fix CMD lint warnings (function exports and comments) &ac; [`1ce091a`](https://github.com/rivy-go/git-changelog/commit/1ce091a8d8a99820ef6f3127c6bf565aaf5b828f)
+
+</details>
+
+---
+
 ## [1.0.0](https://github.com/rivy-go/git-changelog/compare/0.9.1...1.0.0) <small>(2020-04-18)</small>
 
 FORK! ~ project hard forked from `git-chglog/git-chglog`
@@ -56,7 +85,7 @@ To expound on the newly added features:
 6. Adds a corresponding config file entry for the `--tag-filter-pattern` CLI option.
     - configuration file entries, as usual, will be overridden by the CLI option, if used
 
-<details open><summary><small><em>[1.0.0; details]</em></small></summary>
+<details><summary><small><em>[1.0.0; details]</em></small></summary>
 
 #### Features
 
