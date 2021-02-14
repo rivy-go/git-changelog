@@ -1,7 +1,7 @@
 {{- /* <!-- markdownlint-disable --><!-- spellchecker:ignore markdownlint --> */ -}}
 
 {{- define "format-commit" -}}
-* {{ if .Scope }}{{ .Type }} *({{ .Scope }})*: {{ .Subject }}{{ else }}{{ .Header }}{{ end }} &ac; [`{{ .Hash.Short }}`]({{ commitURL .Hash.Long }})
+* {{ if .Scope }}{{ .Type | smartLowerFirstWord }} *({{ .Scope }})*: {{ .Subject | smartLowerFirstWord }}{{ else }}{{ .Header | smartLowerFirstWord }}{{ end }} &ac; [`{{ .Hash.Short }}`]({{ commitURL .Hash.Long }})
 {{ end -}}
 
 {{- define "format-commit-group" }}
@@ -30,7 +30,7 @@
 ## [Unreleased]
 {{ range .Unreleased.CommitGroups }}{{ template "format-commit-group" . }}{{ end -}}
 {{ end }}
-<div class="prefix"></div>
+<div id='last-line-of-prefix'></div>
 {{- $first := true }}{{ range .Versions }}
 
 ---
