@@ -67,7 +67,7 @@ func createApp(actionFunc cli.ActionFunc) *cli.App {
 	app := cli.NewApp()
 	app.Name = "git-changelog"
 	app.Usage = "todo usage for git-changelog"
-	app.Version = Version
+	app.Version = version(FnVersionOptions{HashAbbrevLength: 8})
 
 	app.Flags = []cli.Flag{
 		// init
