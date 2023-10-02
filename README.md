@@ -23,8 +23,6 @@
 * [How it works](#how-it-works)
 * [Getting Started](#getting-started)
   - [Installation](#installation)
-    + [Homebrew (for macOS users)](#homebrew-for-macos-users)
-    + [Go users](#go-users)
   - [Test Installation](#test-installation)
   - [Quick Start](#quick-start)
 * [CLI Usage](#cli-usage)
@@ -69,6 +67,8 @@ We will start with installation and introduce the steps up to the automatic gene
 
 ### Installation
 
+<!--
+
 Please install `git-changelog` in a way that matches your environment.
 
 #### [Homebrew](https://brew.sh) (for macOS users)
@@ -78,7 +78,7 @@ $ brew tap rivy-go/git-changelog
 $ brew install git-changelog
 ```
 
-#### [Scoop](https://scoop.sh) (for Windows users)
+#### [Scoop](https://scoop.sh) (for WinOS)
 
 ```shell
 $ scoop install git-changelog
@@ -86,8 +86,10 @@ $ scoop install git-changelog
 
 #### Go users
 
+-->
+
 ```bash
-$ go get -u github.com/rivy-go/git-changelog/cmd/git-changelog
+$ go install github.com/rivy-go/git-changelog/cmd/git-changelog@latest
 ```
 
 ---
