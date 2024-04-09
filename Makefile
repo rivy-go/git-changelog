@@ -1,11 +1,11 @@
-# Makefile (GoLang; OOS-build support; gmake-form/style; v2023.10.09)
+# Makefile (GoLang; OOS-build support; gmake-form/style; v2024.04.09)
 # Cross-platform (*nix/windows)
 # GNU make (gmake) compatible; ref: <https://www.gnu.org/software/make/manual>
-# Copyright (C) 2020-2023 ~ Roy Ivy III <rivy.dev@gmail.com>; MIT+Apache-2.0 license
+# Copyright (C) 2020-2024 ~ Roy Ivy III <rivy.dev@gmail.com>; MIT+Apache-2.0 license
 
 ## NOTE: requirements ...
 ## * windows ~ `awk`, `grep`, and `make`; use `scoop install gawk grep make`
-## * all platforms ~ `goverage`; use `go get -u github.com/haya14busa/goverage`
+## * all platforms ~ `goverage`; use `go install github.com/haya14busa/goverage@latest` (or `go get -u github.com/haya14busa/goverage` for earlier `go` versions)
 
 # NOTE: * requires `make` version 4.0+ (minimum needed for correct path functions); for windows, install using `scoop install make`
 # NOTE: `make` doesn't handle spaces within file names without gyrations (see <https://stackoverflow.com/questions/9838384/can-gnu-make-handle-filenames-with-spaces>@@<https://archive.is/PYKKq>)
@@ -81,13 +81,18 @@ makefile_set_abs := $(abspath ${makefile_set})
 
 #### * determine OS ID
 
+# note: environment/${OS}=="Windows_NT" for XP, 2000, Vista, 7, 10, 11, ...
 OSID := $(or $(and $(filter .exe,$(patsubst %.exe,.exe,$(subst $() $(),_,${SHELL}))),$(filter win,${OS:Windows_NT=win})),nix)## OSID == [nix,win]
-# for Windows OS, set SHELL to `%ComSpec%` or `cmd` (note: environment/${OS}=="Windows_NT" for XP, 2000, Vista, 7, 10 ...)
-# * `make` may otherwise use an incorrect shell (eg, `bash`), if found; "syntax error: unexpected end of file" error output is indicative
 ifeq (${OSID},win)
-# use fallbacks, avoiding env var case variance issues; note: assumes *no spaces* within the path values specified by ${ComSpec}, ${SystemRoot}, or ${windir}
-COMSPEC := $(strip $(shell echo %ComSpec%))
+# WinOS-specific settings
+# * set SHELL (from COMSPEC or SystemRoot, if possible)
+# ... `make` may otherwise use an incorrect shell (eg, `sh` or `bash`, if found in PATH); "syntax error: unexpected end of file" or "CreateProcess(NULL,...)" error output is indicative
+SHELL := cmd$()## start with a known default shell (`cmd` for WinOS XP+)
+# * set internal variables from environment variables (if available)
+# ... avoid env var case variance issues and use fallbacks
+# ... note: assumes *no spaces* within the path values specified by ${ComSpec}, ${SystemRoot}, or ${windir}
 HOME := $(or $(strip $(shell echo %HOME%)),$(strip $(shell echo %UserProfile%)))
+COMSPEC := $(strip $(shell echo %ComSpec%))
 SystemRoot := $(or $(strip $(shell echo %SystemRoot%)),$(strip $(shell echo %windir%)))
 SHELL := $(firstword $(wildcard ${COMSPEC} ${SystemRoot}/System32/cmd.exe) cmd)
 endif
@@ -208,15 +213,16 @@ endif
 
 # * `rm` shell commands; note: return `${true}` result when argument (`${1}`) is successfully removed (to support verbose feedback display)
 ifeq (${OSID},win)
-%rm_dir_shell_s = (if EXIST $(call %shell_quote,$(call %as_win_path,${1})) ${RMDIR} $(call %shell_quote,$(call %as_win_path,${1})) >${devnull} 2>&1 && ${ECHO} ${true})
-%rm_file_shell_s = (if EXIST $(call %shell_quote,$(call %as_win_path,${1})) ${RM} $(call %shell_quote,$(call %as_win_path,${1})) >${devnull} 2>&1 && ${ECHO} ${true})
-%rm_file_globset_shell_s = (for %%G in $(call %shell_quote,($(call %as_win_path,${1}))) do ${RM} "%%G" >${devnull} 2>&1 && ${ECHO} ${true})
+%rm_dir_shell_s = (if EXIST $(call %shell_quote,$(call %as_win_path,${1})) (${RMDIR} $(call %shell_quote,$(call %as_win_path,${1})) >${devnull} 2>&1 && ${ECHO} ${true}))
+%rm_file_shell_s = (if EXIST $(call %shell_quote,$(call %as_win_path,${1})) (${RM} $(call %shell_quote,$(call %as_win_path,${1})) >${devnull} 2>&1 && ${ECHO} ${true}))
+%rm_file_globset_shell_s = (for %%G in $(call %shell_quote,($(call %as_win_path,${1}))) do (${RM} "%%G" >${devnull} 2>&1 && ${ECHO} ${true}))
 else
 %rm_dir_shell_s = (ls -d $(call %shell_escape,${1}) >${devnull} 2>&1 && { ${RMDIR} $(call %shell_escape,${1}) >${devnull} 2>&1 && ${ECHO} ${true}; } || true)
 %rm_file_shell_s = (ls -d $(call %shell_escape,${1}) >${devnull} 2>&1 && { ${RM} $(call %shell_escape,${1}) >${devnull} 2>&1 && ${ECHO} ${true}; } || true)
 %rm_file_globset_shell_s = (for file in $(call %shell_escape,${1}); do ls -d "$${file}" >${devnull} 2>&1 && ${RM} "$${file}"; done && ${ECHO} "${true}"; done)
 endif
 
+# NOTE: `_ := $(call %rm_dir,...)` or `$(if $(call %rm_dir,...))` can be used to avoid interpreting in-line output as a makefile command/rule (avoids `*** missing separator` errors)
 %rm_dir = $(shell $(call %rm_dir_shell_s,${1}))
 %rm_file = $(shell $(call %rm_file_shell_s,${1}))
 %rm_file_globset = $(shell $(call %rm_file_globset_shell_s,${1}))
@@ -642,7 +648,7 @@ clean: ## Remove build artifacts (for the active configuration; includes interme
 
 realclean: clean ## Remove *all* build artifacts (including all configurations and the build directory)
 ifeq ($(filter-out ${DOT} ${DOT}${DOT} ${SLASH} ${BACKSLASH},${BUILD_DIR}),)
-    @${ECHO} $(call %failure,'realclean' is unavailable for the current build directory ('${BUILD_DIR}').)
+	@${ECHO} $(call %failure,'realclean' is unavailable for the current build directory ('${BUILD_DIR}').)
 else
 	@$(call !shell_noop,::note ~ pre-executed call::$(call %rm_dirs_verbose,${BUILD_DIR}))
 endif
