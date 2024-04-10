@@ -1,4 +1,4 @@
-# Makefile (GoLang; OOS-build support; gmake-form/style; v2024.04.09)
+# Makefile (GoLang; OOS-build support; gmake-form/style; v2024.04.10)
 # Cross-platform (*nix/windows)
 # GNU make (gmake) compatible; ref: <https://www.gnu.org/software/make/manual>
 # Copyright (C) 2020-2024 ~ Roy Ivy III <rivy.dev@gmail.com>; MIT+Apache-2.0 license
@@ -26,7 +26,7 @@
 # spell-checker:ignore (abbrev/acronyms/names) Deno MSDOS MSVC
 # spell-checker:ignore (clang flags) flto Xclang Wextra Werror
 # spell-checker:ignore (flags) coverprofile extldflags
-# spell-checker:ignore (go) GOBIN GOPATH goverage golint
+# spell-checker:ignore (go) GOBIN GOPATH goverage golint asmflags gccgoflags gcflags ldflags
 # spell-checker:ignore (jargon) autoset delims executables maint multilib
 # spell-checker:ignore (misc) brac cmdbuf forwback lessecho lesskey libcmt libpath linenum optfunc opttbl stdext ttyin
 # spell-checker:ignore (people) benhoyt rivy
@@ -39,7 +39,7 @@
 
 NAME := $()## $()/empty/null => autoset to name of containing folder
 
-SRC_PATH := $()## path to source relative to makefile (defaults to first of ['cmd','src','source']); used to create ${SRC_DIR} which is then used as the source base directory path
+# SRC_PATH := $()## path to source relative to makefile (defaults to first of ['cmd','src','source']); used to create ${SRC_DIR} which is then used as the source base directory path
 BUILD_PATH := $()## path to build storage relative to makefile (defaults to '#build'); used to create ${BUILD_DIR} which is then used as the base path for build outputs
 
 ####
@@ -387,6 +387,12 @@ endif
 $(call %debug_var,has_debug_target)
 $(call %debug_var,DEBUG)
 
+$(call %debug_var,COLOR)
+$(call %debug_var,DEBUG)
+$(call %debug_var,STATIC)
+$(call %debug_var,VERBOSE)
+$(call %debug_var,MAKEFILE_debug)
+
 ####
 
 # include sibling configuration file, if exists (easier project config with a stable base Makefile)
@@ -405,15 +411,17 @@ $(call %debug_var,GOPATH)
 $(call %debug_var,GOBIN)
 
 GO_BUILD_FLAGS := $()
+# note: (from `go help build`): '-asmflags', '-gccgoflags', '-gcflags', and '-ldflags' are not additive; the last option specified will be used for each matching "package pattern"
+GO_BUILD_LDFLAGS := $()
 
 GO_BUILD_FLAGS_go116+_false := -i
 
 ## -ldflags="-s -w" == remove symbol and debug info from target
-GO_BUILD_FLAGS_CONFIG_release := -ldflags="-s -w"
+GO_BUILD_LDFLAGS_CONFIG_release := -s -w
 
 ## ref: [](https://www.arp242.net/static-go.html) @@ <https://archive.ph/YP82Y>
 ## * enforce static linking (an error will be raised if any dynamic linking is attempted)
-GO_BUILD_FLAGS_STATIC_true := -ldflags="-extldflags=-static"
+GO_BUILD_LDFLAGS_STATIC_true := -extldflags=-static
 
 #### End of compiler configuration section. ####
 
@@ -513,11 +521,15 @@ $(call %debug_var,OUT_DIR_EXT)
 
 ####
 
-GO_BUILD_FLAGS += ${GO_BUILD_FLAGS_CONFIG_${CONFIG}}
-GO_BUILD_FLAGS += ${GO_BUILD_FLAGS_GO116+_${is_go116+}}
-GO_BUILD_FLAGS += ${GO_BUILD_FLAGS_STATIC_${STATIC}}
+# note: (from `go help build`): '-asmflags', '-gccgoflags', '-gcflags', and '-ldflags' are not additive; the last option specified will be used for each matching "package pattern"
 
-GO_BUILD_FLAGS := $(strip ${GO_BUILD_FLAGS})
+GO_BUILD_FLAGS += ${GO_BUILD_FLAGS_GO116+_${is_go116+}}
+
+GO_BUILD_LDFLAGS += ${GO_BUILD_LDFLAGS_CONFIG_${CONFIG}}
+GO_BUILD_LDFLAGS += ${GO_BUILD_LDFLAGS_STATIC_${STATIC}}
+
+GO_BUILD_LD_FLAGS := $(strip ${GO_BUILD_LDFLAGS})
+GO_BUILD_FLAGS := $(strip ${GO_BUILD_FLAGS}$(if ${GO_BUILD_LDFLAGS}, -ldflags="${GO_BUILD_LDFLAGS}",))
 
 $(call %debug_var,GO_BUILD_FLAGS)
 
@@ -538,17 +550,18 @@ override CONFIG := $(call %lc,${CONFIG})
 
 $(call %debug_var,CONFIG)
 
-SOURCE_dirs := cmd src source
-SOURCE_exts = **/*.go
+# SOURCE_dirs := cmd src source
+SOURCE_dirs := $(call %replace,${makefile_dir}/%,${BASEPATH}/%,$(call %as_nix_path,$(shell go list -f {{.Dir}} ./...)))
+SOURCE_exts = *.go **/*.go
 
-SRC_DIR := $(firstword $(wildcard $(foreach segment,${SRC_PATH} ${SOURCE_dirs},${BASEPATH}/${segment})))
-SRC_DIR := ${SRC_DIR:/=}
-SRC_DIR := ${SRC_DIR:./.=.}
+SRC_files := $(foreach p,$(foreach segment,${SOURCE_dirs},$(foreach elem,${SOURCE_exts},${segment}/${elem})),$(wildcard ${p}))
 
-SRC_files := $(wildcard $(foreach elem,${SOURCE_exts},${SRC_DIR}/${elem}))
-
-$(call %debug_var,SRC_DIR)
+$(call %debug_var,SOURCE_dirs)
 $(call %debug_var,SRC_files)
+
+BIN_DIR := ${BASEPATH}/cmd$()## by `go` convention, executables are placed in the `cmd` directory
+
+$(call %debug_var,BIN_DIR)
 
 OUT_DIR := ${BUILD_DIR}/${OS_PREFIX}${CONFIG}${OUT_DIR_EXT}
 OUT_DIR_bin := ${OUT_DIR}
@@ -589,7 +602,7 @@ all_phony_targets += $()
 ifneq (${NULL},$(filter-out all bins,${.DEFAULT_GOAL}))## define 'run' target only for real executable targets (ignore 'all' or 'bins')
 all_phony_targets += run
 run: ${.DEFAULT_GOAL} ## Build and execute project executable (for ARGS, use `-- [ARGS]` or `ARGS="..."`)
-	@$(strip ${RUNNER} $(call %shell_quote,$^)) ${ARGS}
+	$(strip ${RUNNER} $(call %shell_quote,$^)) ${ARGS}
 endif
 
 ####
@@ -666,7 +679,7 @@ all_phony_targets += fmt format reformat
 fmt: reformat
 format: reformat
 reformat: ## Reformat source files (using `go fmt ...`) [alias: 'fmt','format']
-	go fmt $(shell go list ./... | ${GREP} -v /vendor/)
+	go fmt ${SOURCE_dirs}
 
 ####
 
@@ -674,7 +687,7 @@ all_phony_targets += cov cover coverage
 cov: coverage
 cover: coverage
 coverage: build | ${BUILD_DIR} ## Display test coverage for project files [alias: 'cov','cover']
-	goverage -coverprofile="${BUILD_DIR}/cover.out" $(shell go list ./... | ${GREP} -v /vendor/)
+	goverage -coverprofile="${BUILD_DIR}/cover.out" ${SOURCE_dirs}
 	go tool cover -func="${BUILD_DIR}/cover.out"
 	@$(call %rm_file_shell_s,${BUILD_DIR}/cover.out) >${devnull} 2>&1
 
@@ -682,18 +695,18 @@ coverage: build | ${BUILD_DIR} ## Display test coverage for project files [alias
 
 all_phony_targets += lint
 lint: ## Display lint warnings for source files (using `golint ...`)
-	golint $(shell go list ./... | ${GREP} -v /vendor/)
+	golint ${SOURCE_dirs}
 
 all_phony_targets += test
 test: build ## Test project
-	go test -v $(shell go list ./... | ${GREP} -v /vendor/)
+	go test -v ${SOURCE_dirs}
 
 ####
 
 all_phony_targets += install uninstall
 install: ## Install project executable (to host GOBIN)
-	@go install ${GO_BUILD_FLAGS} "./cmd/${NAME}"
-	@${ECHO} $(call %shell_escape,$(call %success_text,installed '${GOBIN}/${NAME}${EXEEXT}'.))
+	go install ${GO_BUILD_FLAGS} "${BIN_DIR}/${NAME}"
+	@${ECHO} $(call %shell_escape,$(call %success_text,installed as '${GOBIN}/${NAME}${EXEEXT}'.))
 
 uninstall: ## Remove *installed executable* (from host GOBIN)
 	@$(call %rm_file_shell_s,${GOBIN}/${NAME}${EXEEXT}) >${devnull}
@@ -703,7 +716,7 @@ uninstall: ## Remove *installed executable* (from host GOBIN)
 
 all_phony_targets += changelog
 changelog: ## Display CHANGELOG for planned next TAG (using `git-changelog ...`; requires $TAG='M.m.r')
-	@git-changelog --next-tag $(TAG) $(TAG)
+	git-changelog --next-tag $(TAG) $(TAG)
 
 ####
 endif ## not ${has_run_first}
@@ -722,8 +735,8 @@ endif ## not ${has_run_first}
 ####
 
 # ${NAME}: ${PROJECT_TARGET}
-${PROJECT_TARGET}: ${SRC_files} | ${OUT_DIR}
-	@go build $(GO_BUILD_FLAGS) -o "$(OUT_DIR)/$(NAME)$(EXEEXT)" "${SRC_DIR}/$(NAME)"
+${PROJECT_TARGET}: ${SRC_files} ${makefile_set} | ${OUT_DIR}
+	@go build $(GO_BUILD_FLAGS) -o "$(OUT_DIR)" ${SOURCE_dirs}
 	@${ECHO} $(call %shell_escape,$(call %success_text,made '$@'.))
 
 #### * auxiliary/configuration rules
@@ -738,6 +751,9 @@ $(foreach dir,$(filter-out ${DOT} ${DOT}${DOT},${out_dirs_for_rules}),$(eval $(c
 # suppress auto-deletion of intermediate files
 # ref: [`gmake` ~ removing intermediate files](https://stackoverflow.com/questions/47447369/gnu-make-removing-intermediate-files) @@ <https://archive.is/UXrIv>
 .SECONDARY:
+
+# suppress recipe output if not verbose (note: '@' prefix is suppressed no matter the VERBOSE setting)
+$(call %is_truthy,${VERBOSE}).SILENT:
 
 #### * final checks and hints
 
