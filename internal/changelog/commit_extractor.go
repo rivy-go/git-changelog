@@ -129,7 +129,7 @@ func (e *commitExtractor) commitGroupTitle(commit *Commit) (string, string) {
 
 func (e *commitExtractor) sortCommitGroups(groups []*CommitGroup) {
 	// groups
-	sort.Slice(groups, func(i, j int) bool {
+	sort.SliceStable(groups, func(i, j int) bool {
 		var (
 			a, b interface{}
 			ok   bool
@@ -154,7 +154,7 @@ func (e *commitExtractor) sortCommitGroups(groups []*CommitGroup) {
 
 	// commits
 	for _, group := range groups {
-		sort.Slice(group.Commits, func(i, j int) bool {
+		sort.SliceStable(group.Commits, func(i, j int) bool {
 			var (
 				a, b interface{}
 				ok   bool
@@ -181,13 +181,13 @@ func (e *commitExtractor) sortCommitGroups(groups []*CommitGroup) {
 
 func (e *commitExtractor) sortNoteGroups(groups []*NoteGroup) {
 	// groups
-	sort.Slice(groups, func(i, j int) bool {
+	sort.SliceStable(groups, func(i, j int) bool {
 		return strings.ToLower(groups[i].Title) < strings.ToLower(groups[j].Title)
 	})
 
 	// notes
 	for _, group := range groups {
-		sort.Slice(group.Notes, func(i, j int) bool {
+		sort.SliceStable(group.Notes, func(i, j int) bool {
 			return strings.ToLower(group.Notes[i].Title) < strings.ToLower(group.Notes[j].Title)
 		})
 	}

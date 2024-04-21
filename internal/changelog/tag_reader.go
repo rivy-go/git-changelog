@@ -121,7 +121,7 @@ func (*tagReader) assignPreviousAndNextTag(tags []*Tag) {
 }
 
 func (*tagReader) sortTags(tags []*Tag) {
-	sort.Slice(tags, func(i, j int) bool {
+	sort.SliceStable(tags, func(i, j int) bool {
 		return !tags[i].Date.Before(tags[j].Date)
 	})
 }
