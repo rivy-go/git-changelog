@@ -154,6 +154,19 @@ func (e *commitExtractor) sortCommitGroups(groups []*CommitGroup) {
 
 	// commits
 	for _, group := range groups {
+		// initial sorting is `git log ...` dependant; generally in a topologic child-parent order
+		// ... ref: <https://stackoverflow.com/questions/8576503/how-can-i-make-git-log-order-based-on-authors-timestamp> @@ <>
+		// ... ref: <http://thesimplesynthesis.com/post/how-to-sort-git-commits-by-author-date>@@<https://archive.is/DPPpw>
+		// ...maybe... // presort for consistency/stability
+		// // * sort by `Hash.Long` (unique) and then `Subject` (semi-unique, more visible, better for UI/UX) traits
+		// // ToDO: [2024-04-21; rivy] explore using a `sort_by` array of fields in config (w/o breaking the current behavior)
+		// // ToDO: [2024-04-21; rivy] explore adding more Author/Committer info for sorting (eg, AuthorDate, CommitterData)
+		// sort.SliceStable(group.Commits, func(i, j int) bool {
+		// 	return strings.ToLower(group.Commits[i].Hash.Long) < strings.ToLower(group.Commits[j].Hash.Long)
+		// })
+		// sort.SliceStable(group.Commits, func(i, j int) bool {
+		// 	return strings.ToLower(group.Commits[i].Subject) < strings.ToLower(group.Commits[j].Subject)
+		// })
 		sort.SliceStable(group.Commits, func(i, j int) bool {
 			var (
 				a, b interface{}
