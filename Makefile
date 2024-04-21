@@ -1,4 +1,4 @@
-# Makefile (GoLang; OOS-build support; gmake-form/style; v2024.04.10)
+# Makefile (GoLang; OOS-build support; gmake-form/style; v2024.04.21)
 # Cross-platform (*nix/windows)
 # GNU make (gmake) compatible; ref: <https://www.gnu.org/software/make/manual>
 # Copyright (C) 2020-2024 ~ Roy Ivy III <rivy.dev@gmail.com>; MIT+Apache-2.0 license
@@ -48,8 +48,7 @@ BUILD_PATH := $()## path to build storage relative to makefile (defaults to '#bu
 # ARCH := $()## default ARCH for compilation ([$(),...]); $()/empty/null => use CC default ARCH
 # CC_DEFINES := false## provide compiler info (as `CC_...` defines) to compiling targets ('truthy'-type)
 CONFIG := debug## default build configuration (debug/release); `go` packages are generally compiled to targets with debug and symbol information
-# * COLOR ~ defaults to "auto" mode ("on/true" if STDOUT is tty, "off/false" if STDOUT is redirected); respects CLICOLOR/CLICOLOR_FORCE and NO_COLOR (but overridden by `COLOR=..` on command line); refs: <https://bixense.com/clicolors> , <https://no-color.org>
-COLOR := $(or $(if ${CLICOLOR_FORCE},$(if $(filter 0,${CLICOLOR_FORCE}),$(),true),$()),$(if ${MAKE_TERMOUT},$(if $(or $(filter 0,${CLICOLOR}),${NO_COLOR}),$(),true),$()))## enable colorized output ('truthy'-type)
+COLOR := auto## defaults to "auto" mode ("on/true" if STDOUT is tty, "off/false" if STDOUT is redirected); will be modified later, in-process, to respect CLICOLOR/CLICOLOR_FORCE and NO_COLOR (but overridden by `COLOR=..` on command line); refs: <https://bixense.com/clicolors>@@<https://archive.is/mF4IA> , <https://no-color.org>@@<https://archive.ph/c32Wn>
 DEBUG := false## enable compiler debug flags/options ('truthy'-type)
 STATIC := true## compile to statically linked executable ('truthy'-type)
 VERBOSE := false## verbose `make` output ('truthy'-type)
@@ -261,6 +260,13 @@ endif
 
 ####
 
+## determine COLOR based on NO_COLOR and CLICOLOR_FORCE/CLICOLOR; refs: <https://bixense.com/clicolors>@@<https://archive.is/mF4IA> , <https://no-color.org>@@<https://archive.ph/c32Wn>
+COLOR := $(if $(call %is_truthy,${NO_COLOR}),false,${COLOR})## unconditionally NO_COLOR => COLOR=false
+COLOR := $(if $(filter auto,${COLOR}),$(if $(call %is_truthy,${CLICOLOR_FORCE}),true,${COLOR}),${COLOR})## if autoset default ('auto') && CLICOLOR_FORCE => COLOR=true
+COLOR := $(if $(filter auto,${COLOR}),$(if $(and ${CLICOLOR},$(call %is_falsey,${CLICOLOR})),false,${COLOR}),${COLOR})## if autoset default ('auto') && defined CLICOLOR && !CLICOLOR => COLOR=false
+
+####
+
 override COLOR := $(call %as_truthy,$(or $(filter-out auto,$(call %lc,${COLOR})),${MAKE_TERMOUT}))
 override DEBUG := $(call %as_truthy,${DEBUG})
 override STATIC := $(call %as_truthy,${STATIC})
@@ -280,6 +286,7 @@ color_yellow := $(if $(call %is_truthy,${COLOR}),${ESC}[0;33m,)
 color_white := $(if $(call %is_truthy,${COLOR}),${ESC}[0;37m,)
 color_bold := $(if $(call %is_truthy,${COLOR}),${ESC}[1m,)
 color_dim := $(if $(call %is_truthy,${COLOR}),${ESC}[2m,)
+color_hide := $(if $(call %is_truthy,${COLOR}),${ESC}[8;30m,)
 color_reset := $(if $(call %is_truthy,${COLOR}),${ESC}[0m,)
 #
 color_command := ${color_dim}
@@ -303,8 +310,8 @@ color_error := ${color_red}
 %info = $(info $(call %info_text,${1}))
 %success = $(info $(call %success_text,${1}))
 %failure = $(info $(call %failure_text,${1}))
-%warn = $(warning $(call %warning_text,${1}))
-%warning = $(warning $(call %warning_text,${1}))
+%warn = $(info $(call %warning_text,${1}))
+%warning = $(info $(call %warning_text,${1}))
 
 %debug_var = $(call %debug,${1}="${${1}}")
 %info_var = $(call %info,${1}="${${1}}")
@@ -369,7 +376,6 @@ runner_positions := $(call %map,$(eval %f=$$(call %position,$${1},${MAKECMDGOALS
 runner_position := $(firstword ${runner_positions})
 
 make_runner_ARGS := $(if ${has_runner_target},$(call %tail,$(wordlist ${runner_position},$(call %length,${make_ARGS}),${make_ARGS})),)
-override ARGS := $(or $(and ${ARGS},${ARGS}${SPACE})${make_runner_ARGS},${ARGS_default_${has_runner_target}})
 
 $(call %debug_var,has_runner_first)
 $(call %debug_var,has_runner_target)
@@ -398,14 +404,33 @@ $(call %debug_var,MAKEFILE_debug)
 # include sibling configuration file, if exists (easier project config with a stable base Makefile)
 -include ${makefile_path}.config
 
+####
+
+override ARGS := $(or $(and ${ARGS},${ARGS}${SPACE})${make_runner_ARGS},${ARGS_default_${has_runner_target}})
+
+$(call %debug_var,has_runner_first)
+$(call %debug_var,has_runner_target)
+$(call %debug_var,runner_position)
+$(call %debug_var,MAKECMDGOALS)
+$(call %debug_var,make_ARGS)
+$(call %debug_var,make_runner_ARGS)
+$(call %debug_var,ARGS_default_${has_runner_target})
+$(call %debug_var,ARGS)
+
+#### * optional target-specific flags
+
+override TAG := $(if ${TAG},${TAG},v-next)
+
+$(call %debug_var,TAG)
+
 #### End of basic configuration section ####
 
 # ref: [Understanding and Using Makefile Flags](https://earthly.dev/blog/make-flags) @@ <https://archive.is/vEpEU>
 
 #### * GoLang compiler configuration
 
-GOPATH    ?= ${HOME}/go
-GOBIN     ?= ${GOPATH}/bin
+override GOPATH := $(call %as_nix_path,$(or ${GOPATH},${HOME}/go))
+override GOBIN  := $(call %as_nix_path,$(or ${GOBIN},${GOPATH}/bin))
 
 $(call %debug_var,GOPATH)
 $(call %debug_var,GOBIN)
@@ -545,16 +570,15 @@ $(call %debug_var,BUILD_DIR)
 
 ## `go` packages are generally compiled to targets which include debug and symbol information
 # $(call %debug_var,CONFIG)
-CONFIG := $(if $(findstring install,${make_ARGS}),release,${CONFIG})
-override CONFIG := $(call %lc,${CONFIG})
+override CONFIG := $(call %lc,$(if $(findstring install,${make_ARGS}),release,${CONFIG}))
 
 $(call %debug_var,CONFIG)
 
 # SOURCE_dirs := cmd src source
-SOURCE_dirs := $(call %replace,${makefile_dir}/%,${BASEPATH}/%,$(call %as_nix_path,$(shell go list -f {{.Dir}} ./...)))
+SOURCE_dirs := $(call %replace,${makefile_dir}/%,${BASEPATH}/%,$(call %as_nix_path,$(shell go list -f {{.Dir}} ./... 2>${devnull})))
 SOURCE_exts = *.go **/*.go
 
-SRC_files := $(foreach p,$(foreach segment,${SOURCE_dirs},$(foreach elem,${SOURCE_exts},${segment}/${elem})),$(wildcard ${p}))
+SRC_files := $(strip $(foreach p,$(foreach segment,${SOURCE_dirs},$(foreach elem,${SOURCE_exts},${segment}/${elem})),$(wildcard ${p})))
 
 $(call %debug_var,SOURCE_dirs)
 $(call %debug_var,SRC_files)
@@ -573,14 +597,14 @@ $(call %debug_var,OUT_DIR_bin)
 
 PROJECT_TARGET := ${OUT_DIR_bin}/${NAME}${EXEEXT}
 
-.DEFAULT_GOAL := ${PROJECT_TARGET}## *default* target
+.DEFAULT_GOAL := $(if ${SRC_files},${PROJECT_TARGET},$(if ${BIN_SRC_files},bins,$(if ${EG_SRC_files},examples,)))# *default* target
 
 $(call %debug_var,PROJECT_TARGET)
 $(call %debug_var,.DEFAULT_GOAL)
 
 ####
 
-out_dirs += $(strip $(call %uniq,$(if ${has_debug_target},${DEBUG_DIR},) ${OUT_DIR} $(if $(filter-out all bins,${.DEFAULT_GOAL}),${OUT_DIR_bin},) $(if ${BIN_SRC_files},${BIN_OUT_DIR_bin},) $(if ${EG_SRC_files},${EG_OUT_DIR_bin},) $(if ${TEST_SRC_files},${TEST_OUT_DIR_bin},) $(if $(filter-out all bins,${.DEFAULT_GOAL}),${OUT_DIR_obj},) $(patsubst %/,%,$(dir ${OBJ_files} ${OBJ_sup_files} $(if ${BIN_SRC_files},${BIN_OBJ_files} ${BIN_OBJ_sup_files} ${BIN_REZ_files} ,) $(if ${EG_SRC_files},${EG_OBJ_files} ${EG_OBJ_sup_files} ${EG_REZ_files},) $(if ${TEST_SRC_files},${TEST_OBJ_files} ${TEST_OBJ_sup_files} ${TEST_REZ_files},) ${REZ_files})) ${OUT_DIR_targets}))
+out_dirs += $(strip $(call %uniq,$(if ${has_debug_target},${DEBUG_DIR},) ${OUT_DIR} $(if $(filter-out bins examples,${.DEFAULT_GOAL}),${OUT_DIR_bin},) $(if ${BIN_SRC_files},${BIN_OUT_DIR_bin},) $(if ${EG_SRC_files},${EG_OUT_DIR_bin},) $(if ${TEST_SRC_files},${TEST_OUT_DIR_bin},) $(if $(filter-out bins examples,${.DEFAULT_GOAL}),${OUT_DIR_obj},) $(patsubst %/,%,$(dir ${OBJ_files} ${OBJ_sup_files} $(if ${BIN_SRC_files},${BIN_OBJ_files} ${BIN_OBJ_sup_files} ${BIN_REZ_files} ,) $(if ${EG_SRC_files},${EG_OBJ_files} ${EG_OBJ_sup_files} ${EG_REZ_files},) $(if ${TEST_SRC_files},${TEST_OBJ_files} ${TEST_OBJ_sup_files} ${TEST_REZ_files},) ${REZ_files})) ${OUT_DIR_targets}))
 
 out_dirs_for_rules = $(strip $(call %tr,${DOLLAR} ${HASH},${DOLLAR}${DOLLAR} ${BACKSLASH}${HASH},${out_dirs}))
 
@@ -595,7 +619,7 @@ all_phony_targets += $()
 
 # include sibling target(s) file (if/when sibling file exists; provides easy project customization upon a stable base Makefile)
 # * note: `-include ${makefile_path}.target` is placed as late as possible, just prior to any goal/target declarations
--include ${makefile_path}.target
+-include ${makefile_path}.target.config
 
 ####
 
@@ -609,39 +633,66 @@ endif
 ifeq (${false},${has_run_first})## define standard phony targets only when 'run' is not the first target (all text following 'run' is assumed to be arguments for the run; minimizes recipe duplication/overwrite warnings)
 ####
 
+# have_git := $(shell git --version 2>${devnull})
+# have_git_repo := $(if $(shell git status 2>${devnull}),${true},)
+have_git_changelog := $(shell git changelog --version 2>${devnull})
+
+# $(call %debug_var,have_git)
+# $(call %debug_var,have_git_repo)
+$(call %debug_var,have_git_changelog)
+
+have_tests := $(wildcard ${SRC_files}/*_test.go)## .or. (slower) `$(if $(shell go test -v ./... -list . 2>${devnull}),${true},)`
+
+$(call %debug_var,have_tests)
+
 ifeq (${OSID},win)
 shell_filter_targets := ${FINDSTR} -rc:"^[a-zA-Z][^: ]*:[^=].*${HASH}${HASH}"
-# shell_filter_targets := ${shell_filter_targets} | ${FINDSTR} -v "^x:"
-# shell_filter_targets := $(strip ${shell_filter_targets} $(and $(filter all bins,${.DEFAULT_GOAL}), | ${FINDSTR} -v "^run:"))
+shell_filter_targets := $(strip ${shell_filter_targets} $(if $(or $(call %not,${.DEFAULT_GOAL}),$(filter all bins examples,${.DEFAULT_GOAL})), | ${FINDSTR} -v "^run:"))
+shell_filter_targets := $(strip ${shell_filter_targets} $(if $(or $(call %not,${.DEFAULT_GOAL}),$(filter all bins examples,${.DEFAULT_GOAL})), | ${FINDSTR} -v "^install:"))
+shell_filter_targets := $(strip ${shell_filter_targets} $(if $(or $(call %not,${.DEFAULT_GOAL}),$(filter all bins examples,${.DEFAULT_GOAL})), | ${FINDSTR} -v "^uninstall:"))
+shell_filter_targets := $(strip ${shell_filter_targets} $(and $(call %not,${SRC_files}), | ${FINDSTR} -v "^build:"))
+shell_filter_targets := $(strip ${shell_filter_targets} $(and $(call %not,${SRC_files}), | ${FINDSTR} -v "^compile:"))
+shell_filter_targets := $(strip ${shell_filter_targets} $(and $(call %not,${SRC_files}), | ${FINDSTR} -v "^rebuild:"))
 # shell_filter_targets := $(strip ${shell_filter_targets} $(if ${SRC_files}${BIN_SRC_files}${EG_SRC_files}${TEST_SRC_files},, | ${FINDSTR} -v "^all:"))
 # shell_filter_targets := $(strip ${shell_filter_targets} $(if ${SRC_files}${BIN_SRC_files}${EG_SRC_files}${TEST_SRC_files},, | ${FINDSTR} -v "^debug:"))
-# shell_filter_targets := $(strip ${shell_filter_targets} $(and $(call %not,${SRC_files}), | ${FINDSTR} -v "^build:"))
-# shell_filter_targets := $(strip ${shell_filter_targets} $(and $(call %not,${SRC_files}), | ${FINDSTR} -v "^compile:"))
-# shell_filter_targets := $(strip ${shell_filter_targets} $(and $(call %not,${SRC_files}), | ${FINDSTR} -v "^rebuild:"))
-# shell_filter_targets := $(strip ${shell_filter_targets} $(and $(call %not,${BIN_SRC_files}), | ${FINDSTR} -v "^bins:"))
-# shell_filter_targets := $(strip ${shell_filter_targets} $(and $(call %not,${EG_SRC_files}), | ${FINDSTR} -v "^examples:"))
-# shell_filter_targets := $(strip ${shell_filter_targets} $(and $(call %not,${TEST_SRC_files}), | ${FINDSTR} -v "^test:"))
-# shell_filter_targets := $(strip ${shell_filter_targets} $(and $(call %not,${TEST_SRC_files}), | ${FINDSTR} -v "^tests:"))
+shell_filter_targets := $(strip ${shell_filter_targets} $(and $(call %not,${BIN_SRC_files}), | ${FINDSTR} -v "^bins:"))
+shell_filter_targets := $(strip ${shell_filter_targets} $(and $(call %not,${EG_SRC_files}), | ${FINDSTR} -v "^examples:"))
+shell_filter_targets := $(strip ${shell_filter_targets} $(and $(call %not,${SRC_files}), | ${FINDSTR} -v "^coverage:"))
+shell_filter_targets := $(strip ${shell_filter_targets} $(and $(call %not,${SRC_files}), | ${FINDSTR} -v "^lint:"))
+shell_filter_targets := $(strip ${shell_filter_targets} $(and $(call %not,${SRC_files}), | ${FINDSTR} -v "^reformat:"))
+shell_filter_targets := $(strip ${shell_filter_targets} $(and $(call %not,${have_tests}), | ${FINDSTR} -v "^test:"))
+shell_filter_targets := $(strip ${shell_filter_targets} $(and $(call %not,${have_tests}), | ${FINDSTR} -v "^tests:"))
+#
+shell_filter_targets := $(strip ${shell_filter_targets} $(and $(call %not,${have_git_changelog}), | ${FINDSTR} -v "^changelog:"))
 else
 shell_filter_targets := ${GREP} -P '(?i)^[[:alpha:]][^:\s]*:[^=].*${HASH}${HASH}'
-# shell_filter_targets := $(strip ${shell_filter_targets} $(and $(filter all bins,${.DEFAULT_GOAL}), | ${GREP} -Pv "^run:"))
+shell_filter_targets := $(strip ${shell_filter_targets} $(if $(or $(call %not,${.DEFAULT_GOAL}),$(filter all bins examples,${.DEFAULT_GOAL})), | ${FINDSTR} -v "^run:"))
+shell_filter_targets := $(strip ${shell_filter_targets} $(if $(or $(call %not,${.DEFAULT_GOAL}),$(filter all bins examples,${.DEFAULT_GOAL})), | ${FINDSTR} -v "^install:"))
+shell_filter_targets := $(strip ${shell_filter_targets} $(if $(or $(call %not,${.DEFAULT_GOAL}),$(filter all bins examples,${.DEFAULT_GOAL})), | ${FINDSTR} -v "^uninstall:"))
+shell_filter_targets := $(strip ${shell_filter_targets} $(and $(call %not,${SRC_files}), | ${GREP} -Pv "^build:"))
+shell_filter_targets := $(strip ${shell_filter_targets} $(and $(call %not,${SRC_files}), | ${GREP} -Pv "^compile:"))
+shell_filter_targets := $(strip ${shell_filter_targets} $(and $(call %not,${SRC_files}), | ${GREP} -Pv "^rebuild:"))
 # shell_filter_targets := $(strip ${shell_filter_targets} $(if ${SRC_files}${BIN_SRC_files}${EG_SRC_files}${TEST_SRC_files},, | ${GREP} -Pv "^all:"))
 # shell_filter_targets := $(strip ${shell_filter_targets} $(if ${SRC_files}${BIN_SRC_files}${EG_SRC_files}${TEST_SRC_files},, | ${GREP} -Pv "^debug:"))
-# shell_filter_targets := $(strip ${shell_filter_targets} $(and $(call %not,${SRC_files}), | ${GREP} -Pv "^build:"))
-# shell_filter_targets := $(strip ${shell_filter_targets} $(and $(call %not,${SRC_files}), | ${GREP} -Pv "^compile:"))
-# shell_filter_targets := $(strip ${shell_filter_targets} $(and $(call %not,${SRC_files}), | ${GREP} -Pv "^rebuild:"))
-# shell_filter_targets := $(strip ${shell_filter_targets} $(and $(call %not,${BIN_SRC_files}), | ${GREP} -Pv "^bins:"))
-# shell_filter_targets := $(strip ${shell_filter_targets} $(and $(call %not,${EG_SRC_files}), | ${GREP} -Pv "^examples:"))
-# shell_filter_targets := $(strip ${shell_filter_targets} $(and $(call %not,${TEST_SRC_files}), | ${GREP} -Pv "^test:"))
-# shell_filter_targets := $(strip ${shell_filter_targets} $(and $(call %not,${TEST_SRC_files}), | ${GREP} -Pv "^tests:"))
+shell_filter_targets := $(strip ${shell_filter_targets} $(and $(call %not,${BIN_SRC_files}), | ${GREP} -Pv "^bins:"))
+shell_filter_targets := $(strip ${shell_filter_targets} $(and $(call %not,${EG_SRC_files}), | ${GREP} -Pv "^examples:"))
+shell_filter_targets := $(strip ${shell_filter_targets} $(and $(call %not,${SRC_files}), | ${GREP} -Pv "^coverage:"))
+shell_filter_targets := $(strip ${shell_filter_targets} $(and $(call %not,${SRC_files}), | ${GREP} -Pv "^lint:"))
+shell_filter_targets := $(strip ${shell_filter_targets} $(and $(call %not,${SRC_files}), | ${GREP} -Pv "^reformat:"))
+shell_filter_targets := $(strip ${shell_filter_targets} $(and $(call %not,${have_tests}), | ${GREP} -Pv "^test:"))
+shell_filter_targets := $(strip ${shell_filter_targets} $(and $(call %not,${have_tests}), | ${GREP} -Pv "^tests:"))
+#
+shell_filter_targets := $(strip ${shell_filter_targets} $(and $(call %not,${have_git_changelog}), | ${GREP} -Pv "^changelog:"))
 endif
 $(call %debug_var,shell_filter_targets)
 
 all_phony_targets += help
 help: ## Display help
-	@${ECHO} $(call %shell_escape,`${color_command}${make_invoke_alias}${color_reset}`)
+	@${ECHO_newline}
 	@${ECHO} $(call %shell_escape,Usage: `${color_command}${make_invoke_alias} [MAKE_TARGET...] [CONFIG=debug|release] [COLOR=<truthy>] [MAKEFLAGS_debug=<truthy>] [VERBOSE=<truthy>]${color_reset}`)
-	@${ECHO} $(call %shell_escape,Builds $(if $(filter all bins,${.DEFAULT_GOAL}),'${color_target}${.DEFAULT_GOAL}${color_reset}' targets,'${color_target}$(call %strip_leading_dotslash,${.DEFAULT_GOAL})${color_reset}') within '${color_path}$(call %strip_leading_dotslash,${current_dir})${color_reset}')
+ifneq (,$(or ${SRC_files},${BIN_SRC_files},${EG_SRC_files}))
+	@${ECHO} $(call %shell_escape,Builds $(if $(filter all bins examples,${.DEFAULT_GOAL}),'${color_target}${.DEFAULT_GOAL}${color_reset}' targets,'${color_target}$(call %strip_leading_dotslash,${.DEFAULT_GOAL})${color_reset}') within '${color_path}$(call %strip_leading_dotslash,${current_dir})${color_reset}')
+endif
 	@${ECHO_newline}
 	@${ECHO} $(call %shell_escape,MAKE_TARGETs:)
 	@${ECHO_newline}
@@ -650,6 +701,7 @@ ifeq (${OSID},win)
 else
 	@${CAT} $(call %map,%shell_quote,${makefile_set}) | ${shell_filter_targets} | ${SORT} | ${AWK} 'match($$0,"^([^:]+):.*?${HASH}${HASH}\\s*(.*)$$",m){ printf "${color_success}%-10s${color_reset}\t${color_info}%s${color_reset}\n", m[1], m[2] }END{}'
 endif
+	@${ECHO} ${color_hide}${DOT}${color_reset}
 
 ####
 
@@ -715,8 +767,8 @@ uninstall: ## Remove *installed executable* (from host GOBIN)
 ####
 
 all_phony_targets += changelog
-changelog: ## Display CHANGELOG for planned next TAG (using `git-changelog ...`; requires $TAG='M.m.r')
-	git-changelog --next-tag $(TAG) $(TAG)
+changelog: ## Display changelog for planned next TAG (using `git-changelog ...`; optionally use TAG="M.m.r")
+	git-changelog --next-tag ${TAG} ${TAG}
 
 ####
 endif ## not ${has_run_first}
@@ -758,7 +810,8 @@ $(call %is_truthy,${VERBOSE}).SILENT:
 #### * final checks and hints
 
 ifeq (${NULL},$(or ${SRC_files},${BIN_SRC_files},${EG_SRC_files}))
-$(call %warning,no source files found; is `SRC_DIR` ('${SRC_DIR}') set correctly for the project?)
+msg := no source files found; unrecognized project format and `go list -f {{.Dir}} ./...` finds no files
+$(call %warning,${msg})
 endif
 
 # $(call %debug_var,NULL)
