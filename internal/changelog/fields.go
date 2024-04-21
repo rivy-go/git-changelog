@@ -95,7 +95,7 @@ type Tag struct {
 	Previous *RelateTag
 }
 
-// Version is a tag-separeted datset to be included in CHANGELOG
+// Version is a tag-separated dataset to be included in CHANGELOG
 type Version struct {
 	Tag           *Tag
 	CommitGroups  []*CommitGroup

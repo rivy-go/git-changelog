@@ -30,7 +30,7 @@ A format influenced by [Angular commit message](https://github.com/angular/angul
 
 Must be one of the following:
 
-* **docs:** Documention only changes
+* **docs:** Documentation only changes
 * **ci:** Changes to our CI configuration files and scripts
 * **chore:** Updating Makefile etc, no production code changes
 * **feat:** A new feature

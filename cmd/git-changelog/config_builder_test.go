@@ -7,7 +7,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestConfigBulider(t *testing.T) {
+func TestConfigBuilder(t *testing.T) {
 	assert := assert.New(t)
 	builder := NewConfigBuilder()
 
@@ -32,7 +32,7 @@ func TestConfigBulider(t *testing.T) {
 	))
 }
 
-func TestConfigBuliderEmptyRepoURL(t *testing.T) {
+func TestConfigBuilderEmptyRepoURL(t *testing.T) {
 	assert := assert.New(t)
 	builder := NewConfigBuilder()
 
@@ -47,7 +47,7 @@ func TestConfigBuliderEmptyRepoURL(t *testing.T) {
 	assert.Contains(out, "  repository_url: \"\"")
 }
 
-func TestConfigBuliderInvalidFormat(t *testing.T) {
+func TestConfigBuilderInvalidFormat(t *testing.T) {
 	assert := assert.New(t)
 	builder := NewConfigBuilder()
 
