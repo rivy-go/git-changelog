@@ -1,6 +1,6 @@
 package main
 
-const Version = "1.1.0"
+const Version = "1.2.0"
 
 var VersionFromBuilder string // set by the build system, when needed (ie, for earlier golang versions)
 

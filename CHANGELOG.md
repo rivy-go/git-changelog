@@ -13,9 +13,43 @@
 
 ---
 
+## [1.2.0](https://github.com/rivy-go/git-changelog/compare/1.1.0...1.2.0) <small>(2024-04-24)</small>
+
+<details open><summary><small><em>[1.2.0; details]</em></small></summary>
+
+#### Changes
+
+* change ~ add *disabled* code to presort commits with ToDOs &ac; [`7e0e45a`](https://github.com/rivy-go/git-changelog/commit/7e0e45acd7abdcdc897ebdb045e932fd7320a418)
+* change ~ use stable sorts enabling final output consistency/stability &ac; [`afe58e0`](https://github.com/rivy-go/git-changelog/commit/afe58e00bbc2477c323db66e12880384dfba2aa1)
+* change ~ add `bmp` config (better version control/consistency) &ac; [`b2025e0`](https://github.com/rivy-go/git-changelog/commit/b2025e0308eaf9f5d7ca080a5a1f766a543cf504)
+* change ~ add available detail to version (improves precision of version) &ac; [`866828c`](https://github.com/rivy-go/git-changelog/commit/866828c61b0c2562df93aa4a7cdaf9cc68c1cbe6)
+
+#### Documentation
+
+* docs ~ (README) remove broken badges &ac; [`eb00b20`](https://github.com/rivy-go/git-changelog/commit/eb00b20861e6b6a67b5b10c482e4890b2df5a0b7)
+* docs ~ (README) add installation notes &ac; [`975ff94`](https://github.com/rivy-go/git-changelog/commit/975ff943d7568eab70e404722764ea9254b97863)
+* docs ~ (CHANGELOG) update after template and stable sort changes &ac; [`443be70`](https://github.com/rivy-go/git-changelog/commit/443be70f06fd3b4b22039898f977d137bf7beb6b)
+* docs ~ polish commentary &ac; [`f5af65e`](https://github.com/rivy-go/git-changelog/commit/f5af65e703a3722ad1b59017b7b4cec1c71d1c6e)
+* docs ~ (README) correct/revise install instructions &ac; [`5c594cd`](https://github.com/rivy-go/git-changelog/commit/5c594cd2930f338b3ef62897379cf171cd8c15b2)
+* docs *(spell)*: fix spelling errors &ac; [`a2c0c42`](https://github.com/rivy-go/git-changelog/commit/a2c0c423791671c2640ef5290c22135f4b9c9e88)
+
+#### Maintenance
+
+* maint *(build)*: (Makefile) update (v2024.04.21); multiple changes &ac; [`f995f0b`](https://github.com/rivy-go/git-changelog/commit/f995f0b982ecadd41c4e7295f96a9dad55c53266)
+* maint *(build)*: (Makefile) update to v2024.04.09 &ac; [`6a6b2bf`](https://github.com/rivy-go/git-changelog/commit/6a6b2bf3ce446a7a123416b38a5601f1b4633024)
+* maint *(build)*: (Makefile) fix/improve/refactor &ac; [`dfde77f`](https://github.com/rivy-go/git-changelog/commit/dfde77f5a757e996981330f535c0b16ff713a905)
+* maint *(build)*: CHANGELOG template changes &ac; [`36171bb`](https://github.com/rivy-go/git-changelog/commit/36171bbe257183074a3e05fcc2a4c32939b3299f)
+* maint *(dev)*: fix CHANGELOG template for no commits in range &ac; [`af7e509`](https://github.com/rivy-go/git-changelog/commit/af7e509cbaa22b75ed63eacbf3c565ea48175043)
+* maint *(dev)*: (Makefile) update for fixes (v2024-04-10) &ac; [`738505d`](https://github.com/rivy-go/git-changelog/commit/738505da4926e706f04cf39f32b8b63619e529a4)
+* maint *(dev)*: (gitignore) add possible alternate build directories &ac; [`37379ad`](https://github.com/rivy-go/git-changelog/commit/37379ad35dc157c002fb70b66dc469eb24efa1fe)
+
+</details>
+
+---
+
 ## [1.1.0](https://github.com/rivy-go/git-changelog/compare/1.0.0...1.1.0) <small>(2021-02-13)</small>
 
-<details open><summary><small><em>[1.1.0; details]</em></small></summary>
+<details><summary><small><em>[1.1.0; details]</em></small></summary>
 
 #### Changes
 
