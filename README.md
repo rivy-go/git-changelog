@@ -92,6 +92,14 @@ $ scoop install git-changelog
 $ go install github.com/rivy-go/git-changelog/cmd/git-changelog@latest
 ```
 
+#### Install from source
+
+```bash
+$ git clone github.com/rivy-go/git-changelog
+$ cd git-changelog
+$ go install ./cmd/git-changelog
+```
+
 ---
 
 If you are using another platform, you can download a binary from the [releases page](https://github.com/rivy-go/git-changelog/releases) and place it in a directory in your `$PATH`.
