@@ -9,7 +9,7 @@
 > The changelog format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) using [conventional/semantic commits](https://nitayneeman.com/posts/understanding-semantic-commit-messages-using-git-and-angular).
 
 </div>
-<div class="prefix"></div>
+<div id='last-line-of-prefix'></div>
 
 ---
 
@@ -28,9 +28,9 @@
 
 * maint *(build)*: VSCode configuration update &ac; [`1e47489`](https://github.com/rivy-go/git-changelog/commit/1e474895cdbe52d39fe2798c459bb1bbfa2a5c78)
 * maint *(deps)*: `go mod tidy` &ac; [`530970c`](https://github.com/rivy-go/git-changelog/commit/530970c7043b7277d8ae065345aa61498952df45)
+* maint *(dev)*: update VSCode settings &ac; [`1316480`](https://github.com/rivy-go/git-changelog/commit/1316480e1a68242c9f032f7904f7ae9a82547a02)
 * maint *(dev)*: (gitignore) ignore file history storage &ac; [`340ac99`](https://github.com/rivy-go/git-changelog/commit/340ac9988594dad20517b5f001d27ccc0a6fd857)
 * maint *(dev)*: update .editorconfig &ac; [`39e1f48`](https://github.com/rivy-go/git-changelog/commit/39e1f4867fef71d03d73fef3bbaf56fe174361f8)
-* maint *(dev)*: update VSCode settings &ac; [`1316480`](https://github.com/rivy-go/git-changelog/commit/1316480e1a68242c9f032f7904f7ae9a82547a02)
 * maint *(polish)*: `make format` (ie, `go fmt`) whitespace standardization &ac; [`e8e9894`](https://github.com/rivy-go/git-changelog/commit/e8e989454c58edae4ee06865fa15f04314b8178e)
 * maint *(polish)*: whitespace fixup &ac; [`dde4272`](https://github.com/rivy-go/git-changelog/commit/dde4272f1c153aea847505ddc168e1c208f37f59)
 
@@ -116,10 +116,10 @@ To expound on the newly added features:
 * build ~ configure VSCode debugging of CLI &ac; [`5e5e4ba`](https://github.com/rivy-go/git-changelog/commit/5e5e4ba31a93e17cb1e858b54c5e84ba28448388)
 * maint ~ update `git-chglog` configuration &ac; [`7b926be`](https://github.com/rivy-go/git-changelog/commit/7b926be3a13b1a36d093d47b1f145d019ca57aaa)
 * maint ~ FIXME/broken test &ac; [`735e907`](https://github.com/rivy-go/git-changelog/commit/735e907c54c8b9649e74e18d2d180dd1c542ebc6)
+* maint *(build)*: re-vendor dependencies (via `go mod vendor`) &ac; [`3036c56`](https://github.com/rivy-go/git-changelog/commit/3036c5654426ae2f31af01aa3b550a440201cfac)
 * maint *(build)*: convert project from using `dep` to Go Modules for dependencies &ac; [`41ffd9a`](https://github.com/rivy-go/git-changelog/commit/41ffd9a628a5fcd7ee86df238e982a00eeb840c7)
 * maint *(build)*: add 'format' and 'lint' Makefile targets (code hygiene helpers) &ac; [`f7968be`](https://github.com/rivy-go/git-changelog/commit/f7968bee408572928150fe507868ef72642e6a3a)
 * maint *(build)*: convert to a cross-platform 'Makefile' &ac; [`966b077`](https://github.com/rivy-go/git-changelog/commit/966b07731570e5228b0b234f25d34cd7d0cb9e51)
-* maint *(build)*: re-vendor dependencies (via `go mod vendor`) &ac; [`3036c56`](https://github.com/rivy-go/git-changelog/commit/3036c5654426ae2f31af01aa3b550a440201cfac)
 * maint *(dev)*: update .editorconfig &ac; [`4eb3d10`](https://github.com/rivy-go/git-changelog/commit/4eb3d10a7138560a9c7ef0b4902330354e6d7393)
 * maint *(polish)*: whitespace cleanup &ac; [`3331b52`](https://github.com/rivy-go/git-changelog/commit/3331b52d8f489e9879855f42a2c27b71253d26c4)
 
@@ -542,7 +542,7 @@ feat: Add --tag-filter-pattern flag.
 * chore: Add e2e tests &ac; [`8b6430e`](https://github.com/rivy-go/git-changelog/commit/8b6430ea17207f370c7cfeaef0bf9f5a187a5979)
 * chore: Setup gitignore &ac; [`8c7c870`](https://github.com/rivy-go/git-changelog/commit/8c7c8707ababe1a6d27a48900f9c0dfc779f3c23)
 * chore: Initial commit &ac; [`a44743e`](https://github.com/rivy-go/git-changelog/commit/a44743ef3fe09fd622e22372f8f3e4a3c65f0439)
-* maint *(editor)*: Add Editorconfig &ac; [`78c2f1e`](https://github.com/rivy-go/git-changelog/commit/78c2f1e90939cc8d3ba2b0d6455a2369e22089bc)
+* maint *(editor)*: add Editorconfig &ac; [`78c2f1e`](https://github.com/rivy-go/git-changelog/commit/78c2f1e90939cc8d3ba2b0d6455a2369e22089bc)
 
 #### Refactoring
 
