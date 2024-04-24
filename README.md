@@ -9,9 +9,6 @@
 ![git-changelog](https://raw.githubusercontent.com/git-changelog/artwork/master/repo-banner%402x.png)
 
 [![godoc.org](https://img.shields.io/badge/godoc-reference-blue.svg?style=flat-square)](https://godoc.org/github.com/rivy-go/git-changelog)
-[![Travis](https://img.shields.io/travis/rivy-go/git-changelog.svg?style=flat-square)](https://travis-ci.org/rivy-go/git-changelog)
-[![AppVeyor](https://img.shields.io/appveyor/ci/tsuyoshiwada/git-changelog/master.svg?style=flat-square)](https://ci.appveyor.com/project/tsuyoshiwada/git-changelog/branch/master)
-[![Coverage Status](https://img.shields.io/coveralls/github/rivy-go/git-changelog.svg?style=flat-square)](https://coveralls.io/github/rivy-go/git-changelog?branch=master)
 [![MIT License](http://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](https://github.com/rivy-go/git-changelog/blob/master/LICENSE)
 
 > CHANGELOG generator implemented in Go (Golang).
