@@ -37,7 +37,7 @@
 {{ $output := false -}}
 {{/* <a name="{{ .Tag.Name }}"></a> */}}
 ## {{ if .Tag.Previous }}[{{ .Tag.Name }}]({{ $.Info.RepositoryURL }}/compare/{{ .Tag.Previous.Name }}...{{ .Tag.Name }}){{ else }}{{ .Tag.Name }}{{ end }} <small>({{ datetime "2006-01-02" .Tag.Date }})</small>
-{{ if (index .Commits 0).Body }}
+{{ if and .Commits (index .Commits 0).Body }}
 {{ (index .Commits 0).Body }}
 {{ end }}
 <details{{ if $first }} open{{ $first = false }}{{ end }}><summary><small><em>[{{ .Tag.Name }}; details]</em></small></summary>
