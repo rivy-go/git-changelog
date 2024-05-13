@@ -1,4 +1,4 @@
-# Makefile (GoLang; OOS-build support; gmake-form/style; v2024.04.21)
+# Makefile (GoLang; OOS-build support; gmake-form/style; v2024.05.13)
 # Cross-platform (*nix/windows)
 # GNU make (gmake) compatible; ref: <https://www.gnu.org/software/make/manual>
 # Copyright (C) 2020-2024 ~ Roy Ivy III <rivy.dev@gmail.com>; MIT+Apache-2.0 license
@@ -511,7 +511,7 @@ $(call %debug_var,NAME)
 ####
 
 # `go` version determination
-s := $(shell go version)
+s := $(shell go version 2>${devnull})
 # remove all non-version-compatible punctuation characters (leaving common version characters [${BACKSLASH} ${SLASH} ${DOT} _ - +])
 s := $(call %tr,$(filter-out ${SLASH} ${BACKSLASH} ${DOT} _ - +,${[punct]}),$(),${s})
 # $(call %debug_var,s)
@@ -666,9 +666,9 @@ shell_filter_targets := $(strip ${shell_filter_targets} $(and $(call %not,${have
 shell_filter_targets := $(strip ${shell_filter_targets} $(and $(call %not,${have_git_changelog}), | ${FINDSTR} -v "^changelog:"))
 else
 shell_filter_targets := ${GREP} -P '(?i)^[[:alpha:]][^:\s]*:[^=].*${HASH}${HASH}'
-shell_filter_targets := $(strip ${shell_filter_targets} $(if $(or $(call %not,${.DEFAULT_GOAL}),$(filter all bins examples,${.DEFAULT_GOAL})), | ${FINDSTR} -v "^run:"))
-shell_filter_targets := $(strip ${shell_filter_targets} $(if $(or $(call %not,${.DEFAULT_GOAL}),$(filter all bins examples,${.DEFAULT_GOAL})), | ${FINDSTR} -v "^install:"))
-shell_filter_targets := $(strip ${shell_filter_targets} $(if $(or $(call %not,${.DEFAULT_GOAL}),$(filter all bins examples,${.DEFAULT_GOAL})), | ${FINDSTR} -v "^uninstall:"))
+shell_filter_targets := $(strip ${shell_filter_targets} $(if $(or $(call %not,${.DEFAULT_GOAL}),$(filter all bins examples,${.DEFAULT_GOAL})), | ${GREP} -Pv "^run:"))
+shell_filter_targets := $(strip ${shell_filter_targets} $(if $(or $(call %not,${.DEFAULT_GOAL}),$(filter all bins examples,${.DEFAULT_GOAL})), | ${GREP} -Pv "^install:"))
+shell_filter_targets := $(strip ${shell_filter_targets} $(if $(or $(call %not,${.DEFAULT_GOAL}),$(filter all bins examples,${.DEFAULT_GOAL})), | ${GREP} -Pv "^uninstall:"))
 shell_filter_targets := $(strip ${shell_filter_targets} $(and $(call %not,${SRC_files}), | ${GREP} -Pv "^build:"))
 shell_filter_targets := $(strip ${shell_filter_targets} $(and $(call %not,${SRC_files}), | ${GREP} -Pv "^compile:"))
 shell_filter_targets := $(strip ${shell_filter_targets} $(and $(call %not,${SRC_files}), | ${GREP} -Pv "^rebuild:"))
@@ -690,6 +690,7 @@ all_phony_targets += help
 help: ## Display help
 	@${ECHO_newline}
 	@${ECHO} $(call %shell_escape,Usage: `${color_command}${make_invoke_alias} [MAKE_TARGET...] [CONFIG=debug|release] [COLOR=<truthy>] [MAKEFLAGS_debug=<truthy>] [VERBOSE=<truthy>]${color_reset}`)
+	@${ECHO_newline}
 ifneq (,$(or ${SRC_files},${BIN_SRC_files},${EG_SRC_files}))
 	@${ECHO} $(call %shell_escape,Builds $(if $(filter all bins examples,${.DEFAULT_GOAL}),'${color_target}${.DEFAULT_GOAL}${color_reset}' targets,'${color_target}$(call %strip_leading_dotslash,${.DEFAULT_GOAL})${color_reset}') within '${color_path}$(call %strip_leading_dotslash,${current_dir})${color_reset}')
 endif
@@ -701,7 +702,7 @@ ifeq (${OSID},win)
 else
 	@${CAT} $(call %map,%shell_quote,${makefile_set}) | ${shell_filter_targets} | ${SORT} | ${AWK} 'match($$0,"^([^:]+):.*?${HASH}${HASH}\\s*(.*)$$",m){ printf "${color_success}%-10s${color_reset}\t${color_info}%s${color_reset}\n", m[1], m[2] }END{}'
 endif
-	@${ECHO} ${color_hide}${DOT}${color_reset}
+	@${ECHO} $(call %shell_escape,${color_hide}${DOT}${color_reset})
 
 ####
 
@@ -808,6 +809,11 @@ $(foreach dir,$(filter-out ${DOT} ${DOT}${DOT},${out_dirs_for_rules}),$(eval $(c
 $(call %is_truthy,${VERBOSE}).SILENT:
 
 #### * final checks and hints
+
+ifeq (${NULL},${GO_version})
+msg := `go` not found (`go version` unrecognizable); try `sudo apt install golang-go`
+$(call %warning,${msg})
+endif
 
 ifeq (${NULL},$(or ${SRC_files},${BIN_SRC_files},${EG_SRC_files}))
 msg := no source files found; unrecognized project format and `go list -f {{.Dir}} ./...` finds no files
